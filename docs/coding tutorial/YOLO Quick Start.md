@@ -5,7 +5,7 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple ultralytics
 建议安装：
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple opencv-python
 
-##
+## 最简单的实例
 ```python
 from ultralytics import YOLO
 

@@ -11,11 +11,16 @@
 
 ### 损失函数
 > 我们将使用Arcface loss
+参考：https://zhuanlan.zhihu.com/p/128970124
+更基础的参考：https://blog.csdn.net/qq_40321214/article/details/106467270
+用于人脸识别的损失函数：基于Euclid Distance的损失函数（Contrastive Loss、Triplet Loss、Center Loss等），基于Angular Margin相关的损失函数（L-Softmax Loss、A-Softmax Loss、CosFace Loss、ArcFace Loss等）
+
+决策边界：ArcFace：Additive Angular Margin，加法角度间隔 SphereFace：Multiplicative Angular Margin，乘法角度间隔 CosFace：Additive Cosine margin，加法余弦间隔
 
 #### softmax loss
 > 具有基础性的一个损失函数
 
-其公式为：
+其公式为：`Loss = -log(softmax value)`
 
 #### contrastive loss
 此损失拉近标签相同的样本的embedding，拉远标签不同的样本的embedding。其公式为：
@@ -36,6 +41,29 @@
 
 #### center loss
 参考：https://zhuanlan.zhihu.com/p/137764312
+
+为每一类的点与类中心距离的平均值。
+
+一般将其与softmax loss加权求和使用如下：
+<img src="src/softmax add center loss.webp" width="90%">
+
+
+#### Angular Margin相关损失函数
+Angular Margin相关的损失函数就是把softmax loss改成对余弦值求softmax
+
+而一般对类i求softmax值时，会对i项的指数进行更改，以增大类i与其它类的距离，如：
+
+##### A-SoftMax
+其公式如下：
+<img src="src/a-softmax-loss.png" width="90%">
+
+##### CosFace Loss
+其公式如下：
+<img src="src/cosface-loss.png" width="90%">
+
+##### ArcFace Loss
+其公式如下：
+<img src="src/arcface-loss.png" width="90%">
 
 
 ## Bike-Person Re-Identification: A Benchmark and a Comprehensive Evaluation

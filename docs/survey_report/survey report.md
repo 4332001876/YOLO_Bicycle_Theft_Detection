@@ -65,6 +65,14 @@ Angular Margin相关的损失函数就是把softmax loss改成对余弦值求sof
 其公式如下：
 <img src="src/arcface-loss.png" width="90%">
 
+ArcFace论文解读：https://zhuanlan.zhihu.com/p/374733665
+
+#### Circle Loss
+形式上统一了triplet loss和softmax ce loss，并加上了自适应（但不可学习）的参数来调节对Loss中各样本的重视程度（硬例挖掘）。
+
+
+参考（学习资料）：https://zhuanlan.zhihu.com/p/126701500
+参考（评价，含作者亲自答）：https://www.zhihu.com/question/382802283
 
 ## Bike-Person Re-Identification: A Benchmark and a Comprehensive Evaluation
 提出了第一个人-自行车数据集，并做了第一个进行人-自行车配对再识别的工作。

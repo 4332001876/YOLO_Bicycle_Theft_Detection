@@ -2,6 +2,6 @@
 sort: 1
 ---
 
-# Survey Report
+# 调研报告
 
 {% include list.liquid %}

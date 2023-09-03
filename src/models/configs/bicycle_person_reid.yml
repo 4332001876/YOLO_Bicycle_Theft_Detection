@@ -29,8 +29,8 @@ MODEL:
       HARD_MINING: False
 
 DATASETS:
-  NAMES: ("Market1501",)
-  TESTS: ("PartialREID", "PartialiLIDS", "OccludedREID",)
+  NAMES: ("BikePerson",)
+  TESTS: ("BikePerson",)
 
 INPUT:
   SIZE_TRAIN: [384, 128]

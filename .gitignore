@@ -3,6 +3,7 @@
 
 # 输出结果、模型
 /model
+/src/models/weights/*
 /testcases
 *.pt
 *.pth

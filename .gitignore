@@ -12,10 +12,14 @@
 
 #临时文件
 *.log
-/src/logs/*
+#/src/logs/*
+/logs
+/src/logs
+log.txt
 *.pyc
 
 #文档草稿
 /docs/draft
+
 
 

@@ -1,5 +1,6 @@
 #配置信息
 *.lnk
+PersonalConfig.py
 
 # 输出结果、模型
 /model

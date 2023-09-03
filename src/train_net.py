@@ -14,6 +14,8 @@ from fastreid.engine import DefaultTrainer, default_argument_parser, default_set
 from fastreid.utils.checkpoint import Checkpointer
 
 
+from models import BikePerson
+
 def setup(args):
     """
     Create configs and perform basic setups.
@@ -48,6 +50,7 @@ def main(args):
 if __name__ == "__main__":
     args = default_argument_parser().parse_args()
     args.config_file = "models/configs/bicycle_person_reid.yml"
+    args.num_gpus = 0
     print("Command Line Args:", args)
     launch(
         main,

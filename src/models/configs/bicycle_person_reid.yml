@@ -1,5 +1,6 @@
 MODEL:
   META_ARCHITECTURE: Baseline
+  DEVICE: cpu
 
   BACKBONE:
     NAME: build_resnet_backbone
@@ -68,6 +69,6 @@ TEST:
   EVAL_PERIOD: 10
   IMS_PER_BATCH: 128
 
-CUDNN_BENCHMARK: True
+CUDNN_BENCHMARK: False
 
 OUTPUT_DIR: ../logs/bicycle_person_reid

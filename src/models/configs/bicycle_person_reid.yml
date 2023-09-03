@@ -10,10 +10,11 @@ MODEL:
     FEAT_DIM: 2048
     WITH_IBN: True
     PRETRAIN: True
+    PRETRAIN_PATH: C:\Users\cyka\.cache\torch\hub\checkpoints\resnet50-0676ba61.pth
 
   HEADS:
-    NAME: DSRHead
-    POOL_LAYER: FastGlobalAvgPool
+    NAME: EmbeddingHead
+    POOL_LAYER: GlobalAvgPool
     WITH_BNNECK: True
     CLS_LAYER: Linear
 
@@ -41,7 +42,7 @@ INPUT:
     ENABLED: True
 
 DATALOADER:
-  SAMPLER_TRAIN: NaiveIdentitySampler
+  SAMPLER_TRAIN: TrainingSampler
   NUM_INSTANCE: 4
   NUM_WORKERS: 8
 

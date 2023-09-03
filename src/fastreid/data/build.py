@@ -8,6 +8,7 @@ import logging
 import os
 
 import torch
+from torch.utils.data import DataLoader
 TORCH_MAJOR = int(torch.__version__.split('.')[0])
 TORCH_MINOR = int(torch.__version__.split('.')[1])
 
@@ -93,8 +94,15 @@ def build_reid_train_loader(
 
     batch_sampler = torch.utils.data.sampler.BatchSampler(sampler, mini_batch_size, True)
 
-    train_loader = DataLoaderX(
+    '''train_loader = DataLoaderX(
         comm.get_local_rank(),
+        dataset=train_set,
+        num_workers=num_workers,
+        batch_sampler=batch_sampler,
+        collate_fn=fast_batch_collator,
+        pin_memory=True,
+    )'''
+    train_loader = DataLoader(
         dataset=train_set,
         num_workers=num_workers,
         batch_sampler=batch_sampler,

@@ -1,6 +1,20 @@
+#配置信息
+*.lnk
+
+# 输出结果、模型
 /model
 /testcases
 *.pt
+*.pth
 /src/runs
-/docs/draft
 /docs/coding tutorial/examples/runs
+
+#临时文件
+*.log
+/src/logs/*
+*.pyc
+
+#文档草稿
+/docs/draft
+
+

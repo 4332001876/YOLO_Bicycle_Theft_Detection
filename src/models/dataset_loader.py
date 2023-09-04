@@ -74,11 +74,11 @@ class BikePerson(ImageDataset):
             assert 1 <= camid <= 6
             camid -= 1  # index starts from 0
 
-            # 根据pid模10的余数，将数据分为训练集、查询集和测试集
+            # 根据pid模10的余数，将数据分为训练集、查询参考集；查询、参考集按照camid来分
             if pid % 10 < 5:
                 if dataset_type != DatasetType.Train:
                     continue
-            elif pid % 10 == 5:
+            elif camid % 2 == 0:
                 if dataset_type != DatasetType.Query:
                     continue
             else:

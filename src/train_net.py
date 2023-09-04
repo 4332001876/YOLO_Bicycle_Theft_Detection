@@ -51,6 +51,7 @@ if __name__ == "__main__":
     args = default_argument_parser().parse_args()
     args.config_file = "models/configs/bicycle_person_reid.yml"
     args.num_gpus = 0
+    args.eval_only = True
     print("Command Line Args:", args)
     launch(
         main,

@@ -5,16 +5,9 @@ from collections import defaultdict
 
 import numpy as np
 
-try:
-    from .rank_cylib.rank_cy import evaluate_cy
 
-    IS_CYTHON_AVAI = True
-except:
-    IS_CYTHON_AVAI = False
-    warnings.warn(
-        'Cython rank evaluation (very fast so highly recommended) is '
-        'unavailable, now use python evaluation.'
-    )
+IS_CYTHON_AVAI = False
+
 
 
 def eval_cuhk03(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
@@ -159,7 +152,7 @@ def eval_market1501(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
     return all_cmc, all_AP, all_INP
 
 
-def evaluate_py(distmat, q_pids, g_pids, q_camids, g_camids, max_rank, use_metric_cuhk03):
+def evaluate_cy(distmat, q_pids, g_pids, q_camids, g_camids, max_rank, use_metric_cuhk03):
     if use_metric_cuhk03:
         return eval_cuhk03(distmat, q_pids, g_pids, q_camids, g_camids, max_rank)
     else:
@@ -197,4 +190,4 @@ def evaluate_rank(
     if use_cython and IS_CYTHON_AVAI:
         return evaluate_cy(distmat, q_pids, g_pids, q_camids, g_camids, max_rank, use_metric_cuhk03)
     else:
-        return evaluate_py(distmat, q_pids, g_pids, q_camids, g_camids, max_rank, use_metric_cuhk03)
+        return evaluate_cy(distmat, q_pids, g_pids, q_camids, g_camids, max_rank, use_metric_cuhk03)

@@ -13,7 +13,7 @@ try:
     from .rank_cylib.roc_cy import evaluate_roc_cy
 
     IS_CYTHON_AVAI = True
-except:
+except ImportError:
     IS_CYTHON_AVAI = False
     warnings.warn(
         'Cython roc evaluation (very fast so highly recommended) is '

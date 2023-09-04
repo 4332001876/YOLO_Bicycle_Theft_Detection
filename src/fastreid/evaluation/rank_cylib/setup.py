@@ -4,6 +4,9 @@ from distutils.extension import Extension
 import numpy as np
 from Cython.Build import cythonize
 
+import sys
+sys.argv.append('build_ext')
+sys.argv.append('--inplace')
 
 def numpy_include():
     try:

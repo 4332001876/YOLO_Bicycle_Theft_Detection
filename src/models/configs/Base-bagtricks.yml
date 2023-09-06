@@ -1,6 +1,6 @@
 MODEL:
   META_ARCHITECTURE: Baseline
-  DEVICE: cpu
+  DEVICE: cuda
 
   BACKBONE:
     NAME: build_resnet_backbone
@@ -48,8 +48,8 @@ INPUT:
 
 DATALOADER:
   SAMPLER_TRAIN: NaiveIdentitySampler
-  NUM_INSTANCE: 1
-  NUM_WORKERS: 1
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
 
 SOLVER:
   AMP:

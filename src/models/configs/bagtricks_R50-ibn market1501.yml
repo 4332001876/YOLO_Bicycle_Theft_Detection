@@ -1,0 +1,12 @@
+_BASE_: ./Base-bagtricks.yml
+
+MODEL:
+  WEIGHTS: "D:/Python/Great Project/YOLO_Bicycle_Theft_Detection/src/models/weights/vehicleid_bot_R50-ibn.pth"
+  BACKBONE:
+    WITH_IBN: True
+
+DATASETS:
+  NAMES: ("BikePerson",)
+  TESTS: ("BikePerson",)
+
+OUTPUT_DIR: logs/market1501/bagtricks_R50-ibn

@@ -52,8 +52,8 @@ if __name__ == "__main__":
     args.config_file = "models/configs/bagtricks_R50-ibn market1501.yml"
     # "models/configs/bicycle_person_reid.yml"
     # "models/configs/bagtricks_R50-ibn vehicleID.yml"
-    args.num_gpus = 0
-    args.eval_only = True
+    args.num_gpus = 1
+    # args.eval_only = True
     print("Command Line Args:", args)
     launch(
         main,

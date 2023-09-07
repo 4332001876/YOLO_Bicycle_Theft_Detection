@@ -40,6 +40,7 @@ class BikePerson(ImageDataset):
         # self.root = osp.abspath(osp.expanduser(root))
         personal_config=PersonalConfig()
         data_dir = personal_config.bike_person_dataset_dir
+        self.data_dir = data_dir
         if osp.isdir(data_dir):
             self.data_dir = data_dir
         else:

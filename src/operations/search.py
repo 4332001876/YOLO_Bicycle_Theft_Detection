@@ -1,7 +1,4 @@
-import sys
-
-sys.path.append("..")
-from config import DEFAULT_TABLE
+from ..server.config import DEFAULT_TABLE
 
 
 def do_search(table_name, img_path, top_k, model, milvus_client, mysql_cli):

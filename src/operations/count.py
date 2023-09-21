@@ -1,8 +1,5 @@
-import sys
-
-sys.path.append("..")
-from config import DEFAULT_TABLE
-from logs import LOGGER
+from ..server.config import DEFAULT_TABLE
+from ..server.logs import LOGGER
 
 
 def do_count(table_name, milvus_cli):

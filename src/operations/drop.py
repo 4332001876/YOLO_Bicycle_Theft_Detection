@@ -1,7 +1,4 @@
-import sys
-
-sys.path.append("..")
-from config import DEFAULT_TABLE
+from ..server.config import DEFAULT_TABLE
 
 
 def do_drop(table_name, milvus_cli, mysql_cli):

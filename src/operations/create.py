@@ -1,7 +1,4 @@
-import sys
-
-sys.path.append("..")
-from config import DEFAULT_TABLE
+from ..server.config import DEFAULT_TABLE
 
 
 def do_create(table, milvus_client, mysql_cli):

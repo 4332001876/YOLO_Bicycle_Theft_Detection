@@ -1,8 +1,6 @@
-import sys
 import pickle
 import base64
-sys.path.append("..")
-from config import DEFAULT_TABLE
+from ..server.config import DEFAULT_TABLE
 
 def do_update(uploadImagesModel, img_path, model, milvus_client, mysql_cli):
     table_name = uploadImagesModel.table

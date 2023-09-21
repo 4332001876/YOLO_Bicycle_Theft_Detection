@@ -19,3 +19,5 @@ scikit-learn
 tabulate
 gdown
 faiss-gpu
+pymysql
+pymilvus

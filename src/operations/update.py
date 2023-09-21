@@ -1,8 +1,8 @@
 import sys
-
+import pickle
+import base64
 sys.path.append("..")
 from config import DEFAULT_TABLE
-from util import commen_util
 
 def do_update(uploadImagesModel, img_path, model, milvus_client, mysql_cli):
     table_name = uploadImagesModel.table
@@ -20,7 +20,7 @@ def do_update(uploadImagesModel, img_path, model, milvus_client, mysql_cli):
 
     try:
         # mysql_cli.create_mysql_table(table_name)
-        return mysql_cli.update(table_name, (ids[0], uploadImagesModel.tags, uploadImagesModel.brief,commen_util.obj_encode(feat),uploadImagesModel.id))
+        return mysql_cli.update(table_name, (ids[0], uploadImagesModel.tags, uploadImagesModel.brief,base64.b64encode(pickle.dumps(feat)).decode(),uploadImagesModel.id))
     except Exception as e:
         milvus_client.delete(table_name, "id in [%s]" % ids[0])
         raise e

@@ -1,8 +1,9 @@
 import sys
-
+import pickle
+import base64
 sys.path.append("..")
 from config import DEFAULT_TABLE
-from util import commen_util
+
 
 def do_upload(uploadImagesModel, img_path, model, milvus_client, mysql_cli):
     """
@@ -22,6 +23,6 @@ def do_upload(uploadImagesModel, img_path, model, milvus_client, mysql_cli):
     # milvus_client.create_index(table_name)
     try:
         # mysql_cli.create_mysql_table(table_name)
-        return mysql_cli.insert(table_name, (ids[0],uploadImagesModel.tags, uploadImagesModel.brief,commen_util.obj_encode(feat)))
+        return mysql_cli.insert(table_name, (ids[0],uploadImagesModel.tags, uploadImagesModel.brief,base64.b64encode(pickle.dumps(feat)).decode()))
     except Exception as e:
         raise e

@@ -2,7 +2,8 @@ import sys
 
 sys.path.append("..")
 from config import DEFAULT_TABLE
-from util import commen_util
+import pickle
+import base64
 
 
 def do_load(table, milvus_client, mysql_cli):
@@ -39,7 +40,7 @@ def do_load_once(table_name, milvus_client, mysql_cli):
         try:
             if item[1] is not None:
                 milvus_client.delete(table_name, "id in [%s]" % item[1])
-            feat = commen_util.obj_decode(item[4])
+            feat = base64.b64encode(pickle.dumps(item[4])).decode()
             ids = milvus_client.insert(table_name, [feat])
             mysql_cli.update_status(table_name, (ids[0], 1, item[0]))
         except Exception as e:

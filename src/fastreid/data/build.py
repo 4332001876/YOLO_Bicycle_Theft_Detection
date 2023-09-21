@@ -17,7 +17,7 @@ if TORCH_MAJOR == 1 and TORCH_MINOR < 8:
 else:
     string_classes = str
 
-from collections import Mapping
+from collections.abc import Mapping
 
 from fastreid.config import configurable
 from fastreid.utils import comm
@@ -102,7 +102,8 @@ def build_reid_train_loader(
         collate_fn=fast_batch_collator,
         pin_memory=True,
     )'''
-    train_loader = DataLoader(
+    train_loader = DataLoaderX(
+        comm.get_local_rank(),
         dataset=train_set,
         num_workers=num_workers,
         batch_sampler=batch_sampler,
@@ -170,7 +171,8 @@ def build_reid_test_loader(test_set, test_batch_size, num_query, num_workers=4):
         collate_fn=fast_batch_collator,
         pin_memory=True,
     )'''
-    test_loader = DataLoader(
+    test_loader = DataLoaderX(
+        comm.get_local_rank(),
         dataset=test_set,
         batch_sampler=batch_sampler,
         num_workers=num_workers,  # save some memory

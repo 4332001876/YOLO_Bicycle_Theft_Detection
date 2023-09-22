@@ -20,19 +20,20 @@ IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 
 
 class DetectedObject: #封装检测到的目标的数据
-    def __init__(self, img, score, cls_id):
+    def __init__(self, img, score, cls_id, center):
         self.img = img
         self.score = score
         self.cls_id = cls_id
+        self.center = center
     def __str__(self):
-        info = "img.size = "+str(self.img.shape)
-        info += "\nscore = %.2f cls_id = %d"%(self.score, self.cls_id)
+        info = "img.size = "+str(self.img.shape)+" center = "+str(self.center)+"\n"
+        info += "score = %.2f cls_id = %d"%(self.score, self.cls_id)
         return info
 
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX Demo!")
     parser.add_argument(
-        "demo", default="image", help="demo type, eg. image, video and webcam"
+        "--demo", default="image", help="demo type, eg. image, video and webcam"
     )
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
     parser.add_argument("-n", "--name", type=str, default=None, help="model name")
@@ -107,7 +108,7 @@ def get_image_list(path):
     return image_names
 
 
-class Predictor(object):
+class YoloxPredictor(object):
     def __init__(
         self,
         model,
@@ -175,7 +176,7 @@ class Predictor(object):
             logger.info("Infer time: {:.4f}s".format(time.time() - t0))
         return outputs, img_info
 
-    def visual(self, output, img_info, cls_conf=0.35):
+    def parse_output(self, output, img_info, cls_conf=0.35): #解析模型输出，不可多次调用
         ratio = img_info["ratio"]
         img = img_info["raw_img"]
         if output is None:
@@ -190,24 +191,15 @@ class Predictor(object):
         cls = output[:, 6]
         scores = output[:, 4] * output[:, 5]
 
+        return img, bboxes, scores, cls
+
+    def visual(self, output, img_info, cls_conf=0.35): #返回可视化结果，不可以与get_objects同时调用
+        img, bboxes, scores, cls = self.parse_output(output, img_info, cls_conf)
         vis_res = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
         return vis_res
 
-    def get_objects(self, output, img_info, cls_conf=0.35):
-        ratio = img_info["ratio"]
-        img = img_info["raw_img"]
-        if output is None:
-            return img
-        output = output.cpu()
-
-        bboxes = output[:, 0:4]
-
-        # preprocessing: resize
-        bboxes /= ratio
-
-        cls = output[:, 6]
-        scores = output[:, 4] * output[:, 5]
-        
+    def get_objects(self, output, img_info, cls_conf=0.35): #返回检测到的目标，不可以与visual同时调用
+        img, bboxes, scores, cls = self.parse_output(output, img_info, cls_conf)
         objects = self.format_result(img, bboxes, scores, cls, cls_conf, self.cls_names)
         return objects
     
@@ -224,8 +216,9 @@ class Predictor(object):
             x1 = int(box[2])
             y1 = int(box[3])
 
-            object_img=img[y0:y1, x0:x1]
-            objs.append(DetectedObject(object_img, score, cls_id))
+            object_img = img[y0:y1, x0:x1]
+            center = ((x1+x0)/2, (y1+y0)/2)
+            objs.append(DetectedObject(object_img, score, cls_id, center))
 
         return objs
 
@@ -363,7 +356,7 @@ def main(exp, args):
         trt_file = None
         decoder = None
 
-    predictor = Predictor(
+    predictor = YoloxPredictor(
         model, exp, COCO_CLASSES, trt_file, decoder,
         args.device, args.fp16, args.legacy,
     )

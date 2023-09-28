@@ -53,7 +53,8 @@ class Pipeline:
         cfg.MODEL.BACKBONE.PRETRAIN = False
         model = DefaultTrainer.build_model(cfg)
         Checkpointer(model).load(cfg.MODEL.WEIGHTS)  # load trained model
-
+        model.training = False
+        
         return model, args, cfg
 
     def reid_setup(self, args):
@@ -82,6 +83,7 @@ class Pipeline:
         for obj in objects:
             inputs = torch.from_numpy(obj.img).unsqueeze(0).permute(0,3,1,2).float()
             inputs = inputs / 255.0
+            inputs = torch.concat([inputs,inputs], dim=0) #fix batchsize=1 bug
             if self.reid_cfg.MODEL.DEVICE == "cuda":
                 inputs = inputs.cuda()
             outputs = self.reid_model(inputs)

@@ -294,18 +294,12 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
         else:
             break
 
-
-def main(exp, args):
+def build_model(exp, args):
     if not args.experiment_name:
         args.experiment_name = exp.exp_name
 
     file_name = os.path.join(exp.output_dir, args.experiment_name)
     os.makedirs(file_name, exist_ok=True)
-
-    vis_folder = None
-    if args.save_result:
-        vis_folder = os.path.join(file_name, "vis_res")
-        os.makedirs(vis_folder, exist_ok=True)
 
     if args.trt:
         args.device = "gpu"
@@ -360,6 +354,20 @@ def main(exp, args):
         model, exp, COCO_CLASSES, trt_file, decoder,
         args.device, args.fp16, args.legacy,
     )
+
+    return predictor
+
+def main(exp, args):
+    file_name = os.path.join(exp.output_dir, args.experiment_name)
+    os.makedirs(file_name, exist_ok=True)
+
+    vis_folder = None
+    if args.save_result:
+        vis_folder = os.path.join(file_name, "vis_res")
+        os.makedirs(vis_folder, exist_ok=True)
+
+    predictor = build_model(exp, args)
+    
     current_time = time.localtime()
     if args.demo == "image":
         image_demo(predictor, vis_folder, args.path, current_time, args.save_result)

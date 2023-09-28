@@ -171,7 +171,7 @@ class YoloxPredictor(object):
         ratio = img_info["ratio"]
         img = img_info["raw_img"]
         if output is None:
-            return img
+            return None
         output = output.cpu()
 
         bboxes = output[:, 0:4]
@@ -185,16 +185,22 @@ class YoloxPredictor(object):
         return img, bboxes, scores, cls
 
     def visual(self, output, img_info, cls_conf=0.35): #返回可视化结果，不可以与get_objects同时调用
-        img, bboxes, scores, cls = self.parse_output(output, img_info, cls_conf)
-        vis_res = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
-        return vis_res
+        if output is None:
+            return img
+        else:
+            img, bboxes, scores, cls = self.parse_output(output, img_info, cls_conf)
+            vis_res = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
+            return vis_res
 
     def get_objects(self, output, img_info, cls_conf=0.35): #返回检测到的目标，不可以与visual同时调用
-        img, bboxes, scores, cls = self.parse_output(output, img_info, cls_conf)
-        objects = self.format_result(img, bboxes, scores, cls, cls_conf, self.cls_names)
-        return objects
+        if output is None:
+            return []
+        else:
+            img, bboxes, scores, cls = self.parse_output(output, img_info, cls_conf)
+            objects = self.format_result(img, bboxes, scores, cls, cls_conf, self.cls_names)
+            return objects
     
-    def format_result(img, boxes, scores, cls_ids, conf=0.5, class_names=None):
+    def format_result(self, img, boxes, scores, cls_ids, conf=0.5, class_names=None):
         objs=[]
         for i in range(len(boxes)):
             box = boxes[i]

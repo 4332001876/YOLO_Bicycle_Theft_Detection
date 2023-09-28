@@ -17,7 +17,7 @@ import torch
 class Pipeline:
     def __init__(self):
         self.yolox_predictor, self.yolo_args = self.build_yolox_model()
-        self.reid_model, self.reid_args = self.build_reid_model()
+        self.reid_model, self.reid_args, self.reid_cfg = self.build_reid_model()
 
     def __call__(self, image): #run the pipeline
         objs = self.spot_object_from_image(image)
@@ -54,9 +54,9 @@ class Pipeline:
         model = DefaultTrainer.build_model(cfg)
         Checkpointer(model).load(cfg.MODEL.WEIGHTS)  # load trained model
 
-        return model, args
+        return model, args, cfg
 
-    def reid_setup(args):
+    def reid_setup(self, args):
         """
         Create configs and perform basic setups.
         """
@@ -79,11 +79,14 @@ class Pipeline:
         return obj_groups
     
     def get_embedding(self, objects: List[DetectedObject]):
-        inputs = torch.stack([obj.image for obj in objects])
-        outputs = self.reid_model(inputs)
-        embeddings = outputs["features"]
-        for i, obj in enumerate(objects):
-            obj.embedding = embeddings[i]
+        for obj in objects:
+            inputs = torch.from_numpy(obj.img).unsqueeze(0).permute(0,3,1,2).float()
+            inputs = inputs / 255.0
+            if self.reid_cfg.MODEL.DEVICE == "cuda":
+                inputs = inputs.cuda()
+            outputs = self.reid_model(inputs)
+            embeddings = outputs["features"]
+            obj.embedding = embeddings[0]
         return objects
 
     def submit_result(self, objects: List[DetectedObject]):

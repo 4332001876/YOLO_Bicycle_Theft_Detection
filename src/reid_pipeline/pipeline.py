@@ -3,6 +3,7 @@ sys.path.append('..')
 
 from reid_pipeline.reid_data_manager import *
 import models.yolox_utils as yolox_utils
+from models.configs.PersonalConfig import PersonalConfig
 
 from fastreid.config import get_cfg
 from fastreid.engine import DefaultTrainer, default_argument_parser, default_setup, launch
@@ -28,9 +29,9 @@ class Pipeline:
         yolox_args = yolox_utils.make_parser().parse_args()
         yolox_args.demo = "image"
         yolox_args.name = "yolox-m"
-        yolox_args.exp_file = "/home/aistudio/Great_Project/YOLO_Bicycle_Theft_Detection/src/models/configs/yolox_exps/default/yolox_m.py"
-        yolox_args.ckpt = "/home/aistudio/Great_Project/Testing_Ground/yolox/yolox_m.pth"
-        yolox_args.path = "/home/aistudio/data/data237899/cam_1_2/Bike/Person_0000"
+        yolox_args.exp_file = PersonalConfig().yolox_exp_file
+        yolox_args.ckpt = PersonalConfig().yolox_ckpt
+        yolox_args.path = PersonalConfig().yolox_path
         yolox_args.conf = 0.25
         yolox_args.nms = 0.45
         yolox_args.tsize = 640

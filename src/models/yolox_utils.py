@@ -16,19 +16,10 @@ from yolox.data.datasets import COCO_CLASSES
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
 
+from reid_pipeline.reid_data_manager import *
+
 IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 
-
-class DetectedObject: #封装检测到的目标的数据
-    def __init__(self, img, score, cls_id, center):
-        self.img = img
-        self.score = score
-        self.cls_id = cls_id
-        self.center = center
-    def __str__(self):
-        info = "img.size = "+str(self.img.shape)+" center = "+str(self.center)+"\n"
-        info += "score = %.2f cls_id = %d"%(self.score, self.cls_id)
-        return info
 
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX Demo!")
@@ -223,20 +214,12 @@ class YoloxPredictor(object):
         return objs
 
 
-def get_objects_from_images(predictor, vis_folder, path, current_time, save_result):
-    if os.path.isdir(path):
-        files = get_image_list(path)
-    else:
-        files = [path]
-    files.sort()
-    for image_name in files:
-        outputs, img_info = predictor.inference(image_name)
-        print(outputs, img_info)
-        objs = predictor.get_objects(outputs[0], img_info, predictor.confthre)
+def get_objects_from_image(predictor: YoloxPredictor, image):
+    outputs, img_info = predictor.inference(image)
+    print(outputs, img_info)
+    objs = predictor.get_objects(outputs[0], img_info, predictor.confthre)
         
-        for obj in objs:
-            pass #todo
-            #print(obj)
+    return objs
         
 def image_demo(predictor, vis_folder, path, current_time, save_result):
     if os.path.isdir(path):

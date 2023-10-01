@@ -1,19 +1,15 @@
 import pymysql
-from config import MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PWD, MYSQL_DB
+from config import *
 from logs import LOGGER
 
 
 class MySQLHelper():
-    """
-    Say something about the ExampleCalass...
-
-    Args:
-        args_0 (`type`):
-        ...
-    """
 
     def __init__(self):
-        self.conn = pymysql.connect(host=MYSQL_HOST, user=MYSQL_USER, port=MYSQL_PORT, password=MYSQL_PWD,
+        self.conn = pymysql.connect(host=MYSQL_HOST, 
+                                    user=MYSQL_USER, 
+                                    port=MYSQL_PORT,
+                                    password=MYSQL_PWD,
                                     database=MYSQL_DB,
                                     local_infile=True)
         self.cursor = self.conn.cursor()
@@ -30,6 +26,27 @@ class MySQLHelper():
         # Create mysql table if not exists
         self.test_connection()
         sql = "CREATE TABLE IF NOT EXISTS "+table_name+"  ( id BIGINT ( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT, milvus_id BIGINT ( 20 ), tags VARCHAR ( 32 ), brief VARCHAR ( 500 ), feature MEDIUMTEXT, upload_status tinyint(2) DEFAULT '0', create_date datetime ( 3 ) DEFAULT CURRENT_TIMESTAMP ( 3 ), modify_date datetime ( 3 ) DEFAULT CURRENT_TIMESTAMP ( 3 ) ON UPDATE CURRENT_TIMESTAMP ( 3 ), PRIMARY KEY ( `id` ), KEY `idx_tags` ( `tags` ) USING BTREE, KEY `idx_milvus_id` ( `milvus_id` )  ) ENGINE = INNODB DEFAULT CHARSET = utf8;"
+        
+        
+        '''
+        这是在MySQL数据库中创建表的SQL语句。此表包含以下列：
+
+        id：自增主键。
+        milvus_id：用于与Milvus向量库中的向量进行匹配的id。
+        tags：用于存储图片标签的字符串。
+        brief：用于存储图片简介的字符串。
+        feature：用于存储图片特征向量的文本格式字符串。
+        upload_status：用于表示此条数据是否已经上传到Milvus向量库中。
+        create_date：用于记录此数据的创建时间。
+        modify_date：用于记录此数据的修改时间。
+        PRIMARY KEY：将id列设置为主键。
+        KEY idx_tags：对tags列创建索引，用于提高查询效率。
+        KEY idx_milvus_id：对milvus_id列创建索引，用于提高匹配效率。
+        ENGINE = INNODB：指定使用InnoDB存储引擎。
+        DEFAULT CHARSET = utf8：指定表的字符集为utf8。
+        通过执行此SQL语句，可以创建一个名为table_name的表（如果此表不存在）并定义它的各种列及其他属性。
+        '''
+        
         self.cursor.execute(sql)
         LOGGER.debug(f"MYSQL create table: {table_name} with sql: {sql}")
 

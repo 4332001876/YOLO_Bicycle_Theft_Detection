@@ -39,23 +39,12 @@ class MilvusHelper:
         try:
             if not self.has_collection(collection_name):
 
-                bicycle_id = FieldSchema(name="bicycle_id", 
-                                         dtype=DataType.INT64, 
-                                         descrition="bicycle_id int64", 
-                                         is_primary=True, 
-                                         auto_id=True)
-                
-                person_id = FieldSchema(name="person_id", 
-                                        dtype=DataType.INT64, 
-                                        descrition="person_id int64", 
-                                        is_primary=False,
-                                        auto_id=True)
                 
                 bicycle_embedding = FieldSchema(name="bicycle_embedding", 
                                                 dtype=DataType.FLOAT_VECTOR, 
                                                 descrition="float bicycle_embedding",
                                                 dim=VECTOR_DIMENSION,
-                                                is_primary=False,
+                                                is_primary=True,
                                                 auto_id = False)
                 
                 person_embedding = FieldSchema(name="person_embedding", 
@@ -65,9 +54,7 @@ class MilvusHelper:
                                                is_primary=False,
                                                auto_id = False)
                 
-                schema = CollectionSchema(fields=[bicycle_id,
-                                                  person_id,
-                                                  bicycle_embedding,
+                schema = CollectionSchema(fields=[bicycle_embedding,
                                                   person_embedding], 
                                                   description="collection description")
                 
@@ -81,7 +68,7 @@ class MilvusHelper:
             # sys.exit(1)
             raise e
 
-    def insert(self, collection_name, vectors):#这里需要修改
+    def insert(self, collection_name, vectors):#TODO:这里需要修改
         # Batch insert vectors to milvus collection
         data = [vectors]
         self.set_collection(collection_name)

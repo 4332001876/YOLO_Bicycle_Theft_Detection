@@ -1,2 +1,2 @@
-from .config import *
-from .logs import LOGGER 
+from server.config import *
+from server.logs import LOGGER 

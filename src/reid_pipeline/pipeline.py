@@ -75,7 +75,7 @@ class Pipeline:
     def spot_object_from_video(self, video):
         obj_groups = []
         for image in video:
-            objects = yolox_utils.get_objects_from_image(self.yolox_predictor, image)
+            objects = self.spot_object_from_image(image)
             obj_groups.append(objects)
         return obj_groups
     

@@ -2,23 +2,16 @@ import os
 from typing import Optional
 
 import uvicorn
-from config import UPLOAD_PATH
-from encode import Resnet50
+from server.config import UPLOAD_PATH
 from fastapi import FastAPI
-from logs import LOGGER
-from milvus_helpers import MilvusHelper
-from mysql_helpers import MySQLHelper
-from operations.count import do_count
-from operations.create import do_create
-from operations.drop import do_drop
-from operations.search import do_search
-from operations.load import do_load
-from operations.update import do_update
-from operations.upload import do_upload
-from operations.delete import do_delete
+from server.logs import LOGGER
+from server.milvus_helpers import MilvusHelper
+from server.mysql_helpers import MySQLHelper
+from server.operations import *
+
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
-from util import image_util
+from image_utils import *
 
 app = FastAPI()
 origins = ["*"]
@@ -30,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 
 )
-MODEL = Resnet50()
+MODEL = Resnet50()#随便指定一个
 MILVUS_CLI = MilvusHelper()
 MYSQL_CLI = MySQLHelper()
 

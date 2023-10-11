@@ -136,7 +136,7 @@ class MilvusHelper:
         if(search_result[0].distances[0] >= DISTANCE_THERSHOLD):
             return -1
         else:
-            mr = self.collection.insert([bicycle_embedding])
+            mr = self.collection.insert(bicycle_embedding)
             id = mr.primary_keys
             self.collection.load()
             LOGGER.debug(

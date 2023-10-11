@@ -216,8 +216,11 @@ class YoloxPredictor(object):
             object_img = img[y0:y1, x0:x1]
             bike_person_img = None
             if cls_id == 1: #bicycle
-                bike_person_y0 = max(0, int(y0 - 1.2 * (y1 - y0)))
-                bike_person_img = img[bike_person_y0:y1, x0:x1]
+                bike_person_y0 = max(0, int(y0 - 1.5 * (y1 - y0))) #up
+                bike_person_y1 = min(img.shape[0], int(y1 + 0.4 * (y1 - y0))) #down
+                bike_person_x0 = max(0, int(x0 - 0.2 * (x1 - x0))) #left
+                bike_person_x1 = min(img.shape[1], int(x1 + 0.4 * (x1 - x0))) #right
+                bike_person_img = img[bike_person_y0:bike_person_y1, bike_person_x0:bike_person_x1]
             center = ((x1+x0)/2, (y1+y0)/2)
             objs.append(DetectedObject(img=object_img, bike_person_img = bike_person_img, score=score, cls_id=cls_id, center=center))
 
@@ -226,8 +229,9 @@ class YoloxPredictor(object):
 
 def get_objects_from_image(predictor: YoloxPredictor, image):
     outputs, img_info = predictor.inference(image)
-    print(outputs, img_info)
+    # print(outputs, img_info)
     objs = predictor.get_objects(outputs[0], img_info, predictor.confthre)
+    objs = [obj for obj in objs if (obj.cls_id == 0 or obj.cls_id == 1)]
         
     return objs
         

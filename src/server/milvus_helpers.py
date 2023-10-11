@@ -1,16 +1,9 @@
-from config import MILVUS_HOST, MILVUS_PORT, VECTOR_DIMENSION, METRIC_TYPE
+from config import *
 from logs import LOGGER
 from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility
 
 
 class MilvusHelper:
-    """
-    Say something about the ExampleCalass...
-
-    Args:
-        args_0 (`type`):
-        ...
-    """
     def __init__(self):
         try:
             self.collection = None
@@ -45,10 +38,26 @@ class MilvusHelper:
         # Create milvus collection if not exists
         try:
             if not self.has_collection(collection_name):
-                field1 = FieldSchema(name="id", dtype=DataType.INT64, descrition="int64", is_primary=True, auto_id=True)
-                field2 = FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, descrition="float vector",
-                                     dim=VECTOR_DIMENSION, is_primary=False)
-                schema = CollectionSchema(fields=[field1, field2], description="collection description")
+
+                
+                bicycle_embedding = FieldSchema(name="bicycle_embedding", 
+                                                dtype=DataType.FLOAT_VECTOR, 
+                                                descrition="float bicycle_embedding",
+                                                dim=VECTOR_DIMENSION,
+                                                is_primary=True,
+                                                auto_id = False)
+                
+                person_embedding = FieldSchema(name="person_embedding", 
+                                               dtype=DataType.FLOAT_VECTOR, 
+                                               descrition="float person_embedding",
+                                               dim=VECTOR_DIMENSION,
+                                               is_primary=False,
+                                               auto_id = False)
+                
+                schema = CollectionSchema(fields=[bicycle_embedding,
+                                                  person_embedding], 
+                                                  description="collection description")
+                
                 self.collection = Collection(name=collection_name, schema=schema)
                 LOGGER.debug(f"Create Milvus collection: {collection_name}")
             else:
@@ -59,7 +68,7 @@ class MilvusHelper:
             # sys.exit(1)
             raise e
 
-    def insert(self, collection_name, vectors):
+    def insert(self, collection_name, vectors):#TODO:这里需要修改
         # Batch insert vectors to milvus collection
         data = [vectors]
         self.set_collection(collection_name)
@@ -76,7 +85,7 @@ class MilvusHelper:
             self.set_collection(collection_name)
             if self.collection.has_index():
                 return None
-            default_index = {"index_type": "IVF_SQ8", "metric_type": METRIC_TYPE, "params": {"nlist": 16384}}
+            default_index = {"index_type": "IVF_FLAT", "metric_type": METRIC_TYPE, "params": {"nlist": 16384}}
             status = self.collection.create_index(field_name="embedding", index_params=default_index, timeout=60)
             if not status.code:
                 LOGGER.debug(
@@ -107,14 +116,15 @@ class MilvusHelper:
             self.set_collection(collection_name)
             search_params = {"metric_type": METRIC_TYPE, "params": {"nprobe": 16}}
             # data = [vectors]n
-            res = self.collection.search(vectors, anns_field="embedding", param=search_params, limit=top_k)
+            res = self.collection.search(vectors, anns_field="bicycle_embedding", param=search_params, limit=top_k)
             LOGGER.debug(f"Successfully search in collection: {res}")
-            return res
+            return res 
         except Exception as e:
             LOGGER.error(f"Failed to search vectors in Milvus: {e}")
             # sys.exit(1)
             raise e
-
+        # res[0].ids:get the IDs of all returned hits
+        # res[0].distances:get the distances to the query vector from all returned hits
 
     def count(self, collection_name):
         # Get the number of milvus collection

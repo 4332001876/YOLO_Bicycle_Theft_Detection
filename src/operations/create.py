@@ -1,5 +1,6 @@
 from ..server.config import DEFAULT_TABLE
 
+#mivus,mysql根据输入表名创建表，并建立索引
 
 def do_create(table, milvus_client, mysql_cli):
     table_name = table

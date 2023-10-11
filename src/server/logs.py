@@ -12,13 +12,6 @@ except ImportError:
 
 
 class MultiprocessHandler(logging.FileHandler):
-    """
-    Say something about the ExampleCalass...
-
-    Args:
-        args_0 (`type`):
-        ...
-    """
     def __init__(self, filename, when='D', backupCount=0, encoding=None, delay=False):
         self.prefix = filename
         self.backupCount = backupCount

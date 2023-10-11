@@ -25,7 +25,7 @@ class MySQLHelper():
     def create_mysql_table(self, table_name):
         # Create mysql table if not exists
         self.test_connection()
-        sql = "CREATE TABLE IF NOT EXISTS "+table_name+"  ( id INT ( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT, milvus_id INT ( 10 ), bicycle_id INT( 10 ), person_id INT( 10 ), upload_status tinyint(2) DEFAULT '0', create_date datetime ( 3 ) DEFAULT CURRENT_TIMESTAMP ( 3 ), modify_date datetime ( 3 ) DEFAULT CURRENT_TIMESTAMP ( 3 ) ON UPDATE CURRENT_TIMESTAMP ( 3 ), PRIMARY KEY ( `id` ), KEY `idx_bicycle` ( `tags` ) USING BTREE, KEY `idx_milvus_id` ( `milvus_id` )  ) ENGINE = INNODB DEFAULT CHARSET = utf8;"
+        sql = "CREATE TABLE IF NOT EXISTS "+table_name+"  ( id INT ( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT, milvus_id INT ( 10 ), bicycle_id INT( 10 ), location_description varchar(200), upload_status tinyint(2) DEFAULT '0', create_date datetime ( 3 ) DEFAULT CURRENT_TIMESTAMP ( 3 ), modify_date datetime ( 3 ) DEFAULT CURRENT_TIMESTAMP ( 3 ) ON UPDATE CURRENT_TIMESTAMP ( 3 ), PRIMARY KEY ( `id` ), KEY `index_bicycle_id` ( `bicycle_id` ) USING BTREE, KEY `index_milvus_id` ( `milvus_id` )  ) ENGINE = INNODB DEFAULT CHARSET = utf8;"
                 
         
         self.cursor.execute(sql)

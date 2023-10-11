@@ -8,6 +8,8 @@ METRIC_TYPE = os.getenv("METRIC_TYPE", "COSINE")
 DEFAULT_TABLE = os.getenv("DEFAULT_TABLE", "similarity_search")
 TOP_K = int(os.getenv("TOP_K", "10"))
 INDEX_TYPE = "IVF_FLAT"#或者选择FLAT（100%精度）
+DISTANCE_THERSHOLD = float(os.getenv("DISTANCE_Threshold", "0.8"))
+
 
 ############### MySQL Configuration ###############
 MYSQL_HOST = os.getenv("MYSQL_HOST", "127.0.0.1")

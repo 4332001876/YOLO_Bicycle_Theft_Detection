@@ -10,5 +10,6 @@ class DetectedObject: #封装检测到的目标的数据
 
     def __str__(self):
         info = "img.size = "+str(self.img.shape)+" center = "+str(self.center)+"\n"
-        info += "score = %.2f cls_id = %d"%(self.score, self.cls_id)
+        info += "score = %.2f cls_id = %d\n"%(self.score, self.cls_id)
+        info += "embedding: "+str(self.embedding)+"  embedding.shape = "+str(self.embedding.shape)
         return info

@@ -17,8 +17,8 @@ def do_search(table_name, img_path, top_k, model, milvus_client, mysql_cli):
     for i in range(len(paths)):
         data = {}
         data['id'] = paths[i][0]
-        data['tags'] = paths[i][2]
-        data['brief'] = paths[i][3]
+        data['bicycle_id'] = paths[i][2]
+        data['person_id'] = paths[i][3]
         data['distance'] = vectors_dict.get(int(paths[i][1]))
         res.append(data)
     return res

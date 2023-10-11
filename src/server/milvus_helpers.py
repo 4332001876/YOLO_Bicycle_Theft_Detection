@@ -38,13 +38,18 @@ class MilvusHelper:
         # Create milvus collection if not exists
         try:
             if not self.has_collection(collection_name):
-
+                
+                milvus_id = FieldSchema(name="pair_id",
+                                        dtype=DataType.INT64,
+                                        descrition="the only id for every bike-person pair",
+                                        is_primary=True,
+                                        auto_id=True)
                 
                 bicycle_embedding = FieldSchema(name="bicycle_embedding", 
                                                 dtype=DataType.FLOAT_VECTOR, 
                                                 descrition="float bicycle_embedding",
                                                 dim=VECTOR_DIMENSION,
-                                                is_primary=True,
+                                                is_primary=False,
                                                 auto_id = False)
                 
                 person_embedding = FieldSchema(name="person_embedding", 
@@ -54,9 +59,10 @@ class MilvusHelper:
                                                is_primary=False,
                                                auto_id = False)
                 
-                schema = CollectionSchema(fields=[bicycle_embedding,
-                                                  person_embedding], 
-                                                  description="collection description")
+                schema = CollectionSchema(fields = [milvus_id,
+                                                    bicycle_embedding,
+                                                    person_embedding], 
+                                                    description="collection description")
                 
                 self.collection = Collection(name=collection_name, schema=schema)
                 LOGGER.debug(f"Create Milvus collection: {collection_name}")
@@ -86,7 +92,7 @@ class MilvusHelper:
             if self.collection.has_index():
                 return None
             default_index = {"index_type": "IVF_FLAT", "metric_type": METRIC_TYPE, "params": {"nlist": 16384}}
-            status = self.collection.create_index(field_name="embedding", index_params=default_index, timeout=60)
+            status = self.collection.create_index(field_name="bicycle_embedding", index_params=default_index, timeout=60)
             if not status.code:
                 LOGGER.debug(
                     f"Successfully create index in collection:{collection_name} with param:{default_index}")

@@ -52,17 +52,9 @@ class MilvusHelper:
                                                 is_primary=False,
                                                 auto_id = False)
                 
-                person_embedding = FieldSchema(name="person_embedding", 
-                                               dtype=DataType.FLOAT_VECTOR, 
-                                               descrition="float person_embedding",
-                                               dim=VECTOR_DIMENSION,
-                                               is_primary=False,
-                                               auto_id = False)
-                
                 schema = CollectionSchema(fields = [milvus_id,
-                                                    bicycle_embedding,
-                                                    person_embedding], 
-                                                    description="collection description")
+                                                    bicycle_embedding], 
+                                                    description="bicycle search")
                 
                 self.collection = Collection(name=collection_name, schema=schema)
                 LOGGER.debug(f"Create Milvus collection: {collection_name}")
@@ -73,18 +65,7 @@ class MilvusHelper:
             LOGGER.error(f"Failed to load data to Milvus: {e}")
             # sys.exit(1)
             raise e
-
-    def insert(self, collection_name, vectors):#TODO:这里需要修改
-        # Batch insert vectors to milvus collection
-        data = [vectors]
-        self.set_collection(collection_name)
-        mr = self.collection.insert(data)
-        ids = mr.primary_keys
-        self.collection.load()
-        LOGGER.debug(
-                f"Insert vectors to Milvus in collection: {collection_name} with {len(vectors)} rows")
-        return ids
-
+        
     def create_index(self, collection_name):
         # Create IVF_FLAT index on milvus collection
         try:
@@ -103,18 +84,7 @@ class MilvusHelper:
             LOGGER.error(f"Failed to create index: {e}")
             # sys.exit(1)
             raise e
-
-    def delete_collection(self, collection_name):
-        # Delete Milvus collection
-        try:
-            self.set_collection(collection_name)
-            self.collection.drop()
-            LOGGER.debug("Successfully drop collection!")
-            return "ok"
-        except Exception as e:
-            LOGGER.error(f"Failed to drop collection: {e}")
-            #  # sys.exit(1)
-            raise e
+        
 
     def search_vectors(self, collection_name, vectors, top_k):
         # Search vector in milvus collection
@@ -143,10 +113,32 @@ class MilvusHelper:
             LOGGER.error(f"Failed to count vectors in Milvus: {e}")
             #  # sys.exit(1)
             raise e
+        
+    def delete_collection(self, collection_name):
+        # Delete Milvus collection
+        try:
+            self.set_collection(collection_name)
+            self.collection.drop()
+            LOGGER.debug("Successfully drop collection!")
+            return "ok"
+        except Exception as e:
+            LOGGER.error(f"Failed to drop collection: {e}")
+            #  # sys.exit(1)
+            raise e
+        
+    
 
-    def delete(self, collection_name, expr):
-        # Get the number of milvus collection
+    def insert_new_bike(self, collection_name, bicycle_embedding):#TODO:maybe还要改
+        # 自行车embedding逐条插入数据库，先在milvus里面检索top1,如果与top1的相似度大于阈值，就不插入，否则插入
         self.set_collection(collection_name)
-        num = self.collection.delete(expr)
-        LOGGER.info(f"Successfully delete the expr:{expr} of the collection:{collection_name}")
-        return num
+        
+        search_result = self.search_vectors(collection_name, [bicycle_embedding], 1)
+        if(search_result[0].distances[0] >= DISTANCE_THERSHOLD):
+            return -1
+        else:
+            mr = self.collection.insert([bicycle_embedding])
+            id = mr.primary_keys
+            self.collection.load()
+            LOGGER.debug(
+                f"Insert vector to Milvus in collection: {collection_name} with one new row")
+            return id

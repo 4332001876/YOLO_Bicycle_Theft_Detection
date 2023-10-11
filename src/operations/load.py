@@ -1,4 +1,4 @@
-from ..server.config import DEFAULT_TABLE
+from server.config import DEFAULT_TABLE
 import pickle
 import base64
 #! copy自别人的项目，急需适配修改！！！

@@ -1,4 +1,4 @@
-from ..server.config import DEFAULT_TABLE
+from server.config import DEFAULT_TABLE
 
 def do_delete(id, table_name, milvus_cli, mysql_cli):
     if not table_name:

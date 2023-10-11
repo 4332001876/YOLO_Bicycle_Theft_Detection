@@ -214,8 +214,12 @@ class YoloxPredictor(object):
             y1 = int(box[3])
 
             object_img = img[y0:y1, x0:x1]
+            bike_person_img = None
+            if cls_id == 1: #bicycle
+                bike_person_y0 = max(0, int(y0 - 1.2 * (y1 - y0)))
+                bike_person_img = img[bike_person_y0:y1, x0:x1]
             center = ((x1+x0)/2, (y1+y0)/2)
-            objs.append(DetectedObject(object_img, score, cls_id, center))
+            objs.append(DetectedObject(img=object_img, bike_person_img = bike_person_img, score=score, cls_id=cls_id, center=center))
 
         return objs
 

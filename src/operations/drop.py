@@ -1,4 +1,4 @@
-from ..server.config import DEFAULT_TABLE
+from server.config import DEFAULT_TABLE
 
 # 删除数据库中的表
 def do_drop(table_name, milvus_cli, mysql_cli):

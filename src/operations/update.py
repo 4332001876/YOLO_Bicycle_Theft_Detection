@@ -1,6 +1,6 @@
 import pickle
 import base64
-from ..server.config import DEFAULT_TABLE
+from server.config import DEFAULT_TABLE
 
 
 def do_update(uploadImagesModel, img_path, model, milvus_client, mysql_cli):

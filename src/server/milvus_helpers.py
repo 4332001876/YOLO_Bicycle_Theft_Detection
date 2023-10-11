@@ -1,5 +1,5 @@
-from config import *
-from logs import LOGGER
+from server.config import *
+from server.logs import LOGGER
 from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility
 
 

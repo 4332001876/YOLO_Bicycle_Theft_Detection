@@ -3,7 +3,7 @@ import re
 import datetime
 import logging
 import sys
-from config import LOGS_NUM
+from server.config import LOGS_NUM
 
 try:
     import codecs

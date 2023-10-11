@@ -1,5 +1,5 @@
-from ..server.config import DEFAULT_TABLE
-from ..server.logs import LOGGER
+from server.config import DEFAULT_TABLE
+from server.logs import LOGGER
 '''
 函数的主要功能是计算给定表中的元素数量，使用了milvus_cli库中的count方法。
 

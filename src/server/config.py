@@ -18,6 +18,7 @@ MYSQL_USER = "root"
 MYSQL_PWD = "123456"
 MYSQL_DB = "Bike_Database"
 MYSQL_TABLE = "Primary_table"
+MYSQL_DELETE_INTERVAL = 7 #days
 
 ############### Data Path ###############
 UPLOAD_PATH = "tmp/search-images"

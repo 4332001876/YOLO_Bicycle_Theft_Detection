@@ -94,21 +94,23 @@ def build_reid_train_loader(
 
     batch_sampler = torch.utils.data.sampler.BatchSampler(sampler, mini_batch_size, True)
 
-    '''train_loader = DataLoaderX(
-        comm.get_local_rank(),
-        dataset=train_set,
-        num_workers=num_workers,
-        batch_sampler=batch_sampler,
-        collate_fn=fast_batch_collator,
-        pin_memory=True,
-    )'''
-    train_loader = DataLoader(
-        dataset=train_set,
-        num_workers=num_workers,
-        batch_sampler=batch_sampler,
-        collate_fn=fast_batch_collator,
-        pin_memory=True,
-    )
+    if torch.cuda.is_available():
+        train_loader = DataLoaderX(
+            comm.get_local_rank(),
+            dataset=train_set,
+            num_workers=num_workers,
+            batch_sampler=batch_sampler,
+            collate_fn=fast_batch_collator,
+            pin_memory=True,
+        )
+    else:
+        train_loader = DataLoader(
+            dataset=train_set,
+            num_workers=num_workers,
+            batch_sampler=batch_sampler,
+            collate_fn=fast_batch_collator,
+            pin_memory=True,
+        )
 
     return train_loader
 
@@ -162,21 +164,23 @@ def build_reid_test_loader(test_set, test_batch_size, num_query, num_workers=4):
     mini_batch_size = test_batch_size // comm.get_world_size()
     data_sampler = samplers.InferenceSampler(len(test_set))
     batch_sampler = torch.utils.data.BatchSampler(data_sampler, mini_batch_size, False)
-    '''test_loader = DataLoaderX(
-        comm.get_local_rank(),
-        dataset=test_set,
-        batch_sampler=batch_sampler,
-        num_workers=num_workers,  # save some memory
-        collate_fn=fast_batch_collator,
-        pin_memory=True,
-    )'''
-    test_loader = DataLoader(
-        dataset=test_set,
-        batch_sampler=batch_sampler,
-        num_workers=num_workers,  # save some memory
-        collate_fn=fast_batch_collator,
-        pin_memory=True,
-    )
+    if torch.cuda.is_available():
+        test_loader = DataLoaderX(
+            comm.get_local_rank(),
+            dataset=test_set,
+            batch_sampler=batch_sampler,
+            num_workers=num_workers,  # save some memory
+            collate_fn=fast_batch_collator,
+            pin_memory=True,
+        )
+    else:
+        test_loader = DataLoader(
+            dataset=test_set,
+            batch_sampler=batch_sampler,
+            num_workers=num_workers,  # save some memory
+            collate_fn=fast_batch_collator,
+            pin_memory=True,
+        )
     return test_loader, num_query
 
 

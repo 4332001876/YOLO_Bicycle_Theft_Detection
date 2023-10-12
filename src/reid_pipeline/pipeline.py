@@ -23,6 +23,7 @@ class Pipeline:
         objs = self.spot_object_from_image(image)
         objs = self.get_embedding(objs)
         self.submit_result(objs)
+        return objs
 
     def build_yolox_model(self):
         # get_yolox_predictor
@@ -36,7 +37,10 @@ class Pipeline:
         yolox_args.nms = 0.45
         yolox_args.tsize = 640
         yolox_args.save_result = True
-        yolox_args.device = "gpu"
+        if torch.cuda.is_available():
+            yolox_args.device = "gpu"
+        else:
+            yolox_args.device = "cpu"
         exp = yolox_utils.get_exp(yolox_args.exp_file, yolox_args.name)
         return yolox_utils.build_model(exp, yolox_args),yolox_args
 

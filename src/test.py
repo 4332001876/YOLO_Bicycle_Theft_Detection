@@ -10,7 +10,8 @@ import time
 def test_pipeline():
     pipeline = Pipeline()
     imgs=[]
-    img_paths = glob.glob("/home/aistudio/data/data237899/BikePerson/cam_1_2/Bike/Person_00*/cam1_bike_*.jpg")
+    # img_paths = glob.glob("/home/aistudio/data/data237899/BikePerson/cam_1_2/Bike/Person_00*/cam1_bike_*.jpg")
+    img_paths = glob.glob(r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_0000\cam1_bike_*.jpg")
     start = time.time()
     for img_path in img_paths:
         imgs.append(cv2.imread(img_path))
@@ -20,9 +21,10 @@ def test_pipeline():
         cnt_obj+=len(objs)
     end = time.time()
     num_img = len(imgs)
-    time_cost = end - start
-    average_time_cost = time_cost / num_img
-    print("Number of Image: %d  Number of object: %d  Time Cost: %.4fs Average Time Cost: %.4fs"%(num_img, cnt_obj, time_cost, average_time_cost))
+    if num_img == 0:
+        time_cost = end - start
+        average_time_cost = time_cost / num_img
+        print("Number of Image: %d  Number of object: %d  Time Cost: %.4fs Average Time Cost: %.4fs"%(num_img, cnt_obj, time_cost, average_time_cost))
 
     for obj in objs:
         print(obj)

@@ -10,7 +10,7 @@ class DetectedObject: #封装检测到的目标的数据
         self.embedding: torch.Tensor = None
 
     def __str__(self):
-        info = "img.size = "+str(self.img.shape)+" center = "+str(self.center)+"\n"
+        info = "img.size(height, width, channel) = "+str(self.img.shape)+" center(x, y) = "+str(self.center)+"\n"
         info += "score = %.2f cls_id = %d\n"%(self.score, self.cls_id)
         if self.embedding is not None:
             info += "embedding: "+str(self.embedding)+"  embedding.shape = "+str(self.embedding.shape)

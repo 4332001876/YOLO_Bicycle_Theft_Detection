@@ -1,4 +1,6 @@
-from reid_pipeline import Pipeline
+from reid_pipeline import Pipeline, DetectedObject
+
+
 from server.milvus_helpers import MilvusHelper
 from server.mysql_helpers import MySQLHelper
 
@@ -91,6 +93,12 @@ class Tester:
     def test_mysql(self):
         mysql = MySQLHelper()
         mysql.create_mysql_table("test")
+        obj = DetectedObject(cam_id=0, img=np.random.randint(0,255,size=(50,50,3)), bike_person_img = np.random.randint(0,255,size=(50,50,3)), score=1, cls_id=1, center=(55,66))
+        mysql.insert("test", 1, obj)
+        # mysql.delete_by_id("test",3)
+        mysql.update_end_time("test", 2, time.time())
+        mysql.search_by_bicycle_ids("test", [1])
+        mysql.auto_delete_ExpiredData("test")
 
 
 if __name__ == "__main__":

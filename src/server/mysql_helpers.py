@@ -3,6 +3,9 @@ from server.config import *
 from datetime import datetime, timedelta
 from reid_pipeline.reid_data_manager import DetectedObject
 
+import cv2
+import time
+
 class MySQLHelper:
     def __init__(self):
         self.conn = pymysql.connect(host=MYSQL_HOST,
@@ -27,65 +30,85 @@ class MySQLHelper:
     def create_mysql_table(self, table_name):
         # Create mysql table if not exists
         self.test_connection()
-        sql = "CREATE TABLE IF NOT EXISTS "+table_name
-        + " (id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, bicycle_id BIGINT UNSIGNED DEFAULT NULL, camera_id INT UNSIGNED DEFAULT NULL, feature TEXT DEFAULT NULL, start_time datetime DEFAULT NULL,end_time datetime(30) DEFAULT NULL,"
-        + "create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP PRIMARY KEY ( `id` ), KEY `index_bicycle_id` ( `bicycle_id` ) USING BTREE ) ENGINE = INNODB DEFAULT CHARSET = utf8;"
+        sql = "CREATE TABLE IF NOT EXISTS "+table_name +" "+\
+        "(id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, "+\
+        "bicycle_id BIGINT UNSIGNED DEFAULT NULL, "+\
+        "camera_id INT UNSIGNED DEFAULT NULL, "+\
+        "start_time BIGINT DEFAULT NULL, "+\
+        "end_time BIGINT DEFAULT NULL, " +\
+        "location_desc VARCHAR(50) DEFAULT NULL, " +\
+        "img_path VARCHAR(100) DEFAULT NULL, " +\
+        "PRIMARY KEY ( `id` ), KEY `index_bicycle_id` ( `bicycle_id` ) USING BTREE "+\
+        ") ENGINE = INNODB DEFAULT CHARSET = utf8;"
 
         self.cursor.execute(sql)
+        self.conn.commit()
 
     def insert(self, table_name, bike_id, obj: DetectedObject):
         # 单条数据插入，返回最后一行id
         self.test_connection()
-        time_str = "%s"%datetime.fromtimestamp(obj.time)
-        sql = "insert into " + table_name + \
-            " (bicycle_id,camera_id,feature,start_time,end_time) values ('%d','%d','','%f','%f');" % (bike_id, obj.cam_id, time_str, time_str)
+        # time_str = "%s"%datetime.fromtimestamp(obj.time)
+        save_folder = UPLOAD_PATH
+        os.makedirs(save_folder, exist_ok=True)
+        img_path = os.path.join(
+            save_folder, time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
+        )
+        img_path = img_path + "_bike_%d"%bike_id + ".jpg"
+
+        cv2.imwrite(img_path, obj.bike_person_img)
+        sql = "INSERT INTO " + table_name + " "\
+            "(bicycle_id, camera_id, start_time, end_time, location_desc, img_path) "+\
+            "VALUES (%d, %d, %ld, %ld, '%s', '%s');" % (bike_id, obj.cam_id, int(obj.time), int(obj.time), str(obj.cam_id), img_path)
         n = self.cursor.execute(sql)
         if n > 0:
-            ms_id = self.cursor.lastrowid
+            ms_id = self.cursor.lastrowid 
             self.conn.commit()
         else:
             self.conn.rollback()
         return ms_id
 
 
-    def search_by_bicycle_id(self, bike_id, table_name):
+    def search_by_bicycle_id(self, table_name, bike_id):
         self.test_connection()
-        sql = "select id,bicycle_id,camera_id,feature,start_time,end_time from " + \
-            table_name + " where bicycle_id in '%s' ;" % bike_id
+        sql = "SELECT * from " + \
+            table_name + " where bicycle_id in (%d) ;" % bike_id
         self.cursor.execute(sql)
-        results = self.cursor.fetchall()
+        results = self.cursor.fetchall() # results类型为嵌套的tuple 
         return results
 
-    def search_by_ids(self, ids, table_name):
+    def search_by_bicycle_ids(self, table_name, bike_ids):
         self.test_connection()
-        str_ids = str(ids).replace('[', '').replace(']', '')
-        sql = "select id,bicycle_id,camera_id,feature,start_time,end_time from " + \
-            table_name + " where id in (" + str_ids + ");"
+        str_bike_ids = str(list(bike_ids)).replace('[', '').replace(']', '')
+        sql = "select * from " + \
+            table_name + " where bicycle_id in (" + str_bike_ids + ");"
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
+        print(results)
         return results
 
 
     def delete_by_id(self, table_name, id):
         self.test_connection()
-        sql = "delete from %s where id = %s" % (table_name, id)
+        sql = "DELETE FROM  %s WHERE id = %s;" % (table_name, id)
         self.cursor.execute(sql)
         self.conn.commit()
 
 
-    def update(self, table_name, data):
-        # Batch insert (Milvus_ids, img_path) to mysql
+    def update_end_time(self, table_name, id, end_time):
+        # end_time is a timestamp(sec)
         self.test_connection()
-        sql = "update " + table_name + " set bicycle_id = %s,camera_id = '%s', feature='%s',start_time='%s',edn_time='%s'" % data
+        sql = "UPDATE " + table_name + " " +\
+            "SET end_time=%ld "%(int(end_time)) +\
+            "WHERE id=%d;"%id
         n = self.cursor.execute(sql)
         self.conn.commit()
 
 
-    def auto_delete_TimeExpired(self,table_name):
+    def auto_delete_ExpiredData(self,table_name, delete_interval=MYSQL_DELETE_INTERVAL):
         self.test_connection()
         # 计算7天前的时间
-        time_limit = datetime.now() - timedelta(days=MYSQL_DELETE_INTERVAL)
-        sql = f"DELETE FROM" + table_name+"WHERE create_time < '{time_limit}'"
+        time_limit = datetime.now() - timedelta(days=delete_interval)
+        sql = f"DELETE FROM " + table_name+" WHERE end_time < %ld"%(int(time_limit.timestamp()))
         self.cursor.execute(sql)
         self.conn.commit()        
         rows_deleted = self.cursor.rowcount

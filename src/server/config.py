@@ -21,6 +21,6 @@ MYSQL_TABLE = "Primary_table"
 MYSQL_DELETE_INTERVAL = 7 #days
 
 ############### Data Path ###############
-UPLOAD_PATH = "tmp/search-images"
+UPLOAD_PATH = "tmp/search-images/"
 
 DATE_FORMAT =  "%Y-%m-%d %H:%M:%S"

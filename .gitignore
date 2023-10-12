@@ -18,6 +18,7 @@ PersonalConfig.py
 /src/logs
 log.txt
 *.pyc
+/src/tmp
 
 #文档草稿
 /docs/draft

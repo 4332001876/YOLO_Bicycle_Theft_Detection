@@ -2,7 +2,7 @@ from server.config import *
 from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility
 
 
-class MilvusHelper:
+class MilvusHelper():
     def __init__(self):
         self.collection = None
         connections.connect(host=MILVUS_HOST, port=MILVUS_PORT)

@@ -1,7 +1,6 @@
 import pymysql
 from server.config import *
 
-
 class MySQLHelper():
 
     def __init__(self):
@@ -24,7 +23,7 @@ class MySQLHelper():
     def create_mysql_table(self, table_name):
         # Create mysql table if not exists
         self.test_connection()
-        sql = "CREATE TABLE IF NOT EXISTS "+table_name+"  ( id INT ( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT, bicycle_id INT( 10 ) DEFAULT NULL, camera_id varchar(20) DEFAULT NULL, feature MEDIUMTEXT DEFAULT NULL,, start_time varchar(30) DEFAULT NULL,end_time varchar(30) DEFAULT NULL, PRIMARY KEY ( `id` ), KEY `index_bicycle_id` ( `bicycle_id` ) USING BTREE ) ENGINE = INNODB DEFAULT CHARSET = utf8;"
+        sql = "CREATE TABLE IF NOT EXISTS "+table_name+"  ( id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, bicycle_id BIGINT UNSIGNED DEFAULT NULL, camera_id INT UNSIGNED DEFAULT NULL, feature MEDIUMTEXT DEFAULT NULL, start_time varchar(30) DEFAULT NULL,end_time varchar(30) DEFAULT NULL, PRIMARY KEY ( `id` ), KEY `index_bicycle_id` ( `bicycle_id` ) USING BTREE ) ENGINE = INNODB DEFAULT CHARSET = utf8;"
 
         self.cursor.execute(sql)
 
@@ -33,7 +32,7 @@ class MySQLHelper():
         self.test_connection()
         
         sql = "insert into " + table_name + \
-            " (milvus_id,bicycle_id,location_description,upload_status) values ('%s','%s','%s','%s',1);" % data
+            " (bicycle_id,camera_id,feature,start_time,end_time) values ('%s','%s','%s','%s','%s');" % data
         n = self.cursor.execute(sql)
         if n > 0:
             ms_id = self.cursor.lastrowid
@@ -43,11 +42,10 @@ class MySQLHelper():
         return ms_id
 
 
-    def search_by_milvus_ids(self, ids, table_name):
+    def search_by_bicycle_id(self, id, table_name):
         self.test_connection()
-        str_ids = str(ids).replace('[', '').replace(']', '')
-        sql = "select id,milvus_id,bicycle_id,location_decription from " + \
-            table_name + " where milvus_id in (" + str_ids + ");"
+        sql = "select id,bicycle_id,camera_id,feature,start_time,end_time from " + \
+            table_name + " where bicycle_id in '%s' ;" % id
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
         return results
@@ -55,7 +53,7 @@ class MySQLHelper():
     def search_by_ids(self, ids, table_name):
         self.test_connection()
         str_ids = str(ids).replace('[', '').replace(']', '')
-        sql = "select id,milvus_id,bicycle_id,location_decription from " + \
+        sql = "select id,bicycle_id,camera_id,feature,start_time,end_timen from " + \
             table_name + " where id in (" + str_ids + ");"
         self.cursor.execute(sql)
         results = self.cursor.fetchall()

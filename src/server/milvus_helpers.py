@@ -96,9 +96,7 @@ class MilvusHelper:
         else:
             raise TypeError("bicycle_embedding type error, expect numpy.ndarray or torch.Tensor, got %s"%type(bicycle_embedding))
 
-# *! 建议这边单独写一个函数，给定embedding,判定milvus数据库里是否存在该辆车，若存在，返回id，若不存在，返回-1
-# *! 该函数还可以在opeartions.py的show_search里用到
-    def check_bicycle_exist(self,bicycle_embedding):
+    def check_bicycle_exist(self, bicycle_embedding):
         if isinstance(bicycle_embedding, torch.Tensor):
             bicycle_embedding = bicycle_embedding.detach().numpy()
 

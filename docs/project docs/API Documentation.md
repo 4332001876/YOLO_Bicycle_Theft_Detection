@@ -43,6 +43,23 @@ class BikePersonObject:
 ```
 
 
+## 数据库结构
 
 
 
+### MySQL
+|   0   |     1      |     2     |     3      |    4     |       5       |    6     |
+| :---: | :--------: | :-------: | :--------: | :------: | :-----------: | :------: |
+|  id   | bicycle_id | camera_id | start_time | end_time | location_desc | img_path |
+
+
+
+|     Field     |        Type         | Null  |  Key  | Default |     Extra      |
+| :-----------: | :-----------------: | :---: | :---: | :-----: | :------------: |
+|      id       | bigint(20) unsigned |  NO   |  PRI  |  NULL   | auto_increment |
+|  bicycle_id   | bigint(20) unsigned |  YES  |  MUL  |  NULL   |                |
+|   camera_id   |  int(10) unsigned   |  YES  |       |  NULL   |                |
+|  start_time   |     bigint(20)      |  YES  |       |  NULL   |                |
+|   end_time    |     bigint(20)      |  YES  |       |  NULL   |                |
+| location_desc |     varchar(50)     |  YES  |       |  NULL   |                |
+|   img_path    |    varchar(100)     |  YES  |       |  NULL   |                |

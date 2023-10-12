@@ -5,6 +5,7 @@ from milvus_helpers import MilvusHelper as milvus
 from mysql_helpers import MySQLHelper as mysql
 
 
+
 # *? 该文件实现数据库的创建，插入，搜索，按时删除等功能
 # *！0 |     1    |     2   |   3   |    4     |   5
 # *！id,bicycle_id,camera_id,feature,start_time,end_time
@@ -25,7 +26,7 @@ def obj_decode(objStr):
 
 #承接reid_pipeline的输出，格式转化为Mysql的输入
 def TransformData(DetectedObject):
-    #data: [id, bicycle_id,camera_id, feature, start_time, end_time]
+    #data: [bicycle_id,camera_id, feature, start_time, end_time]
     formated_data = []
     
     #TODO：这部分还没写完....
@@ -85,7 +86,7 @@ def show_search(table_name,milvus,mysql,bicycle_embedding):
         return mysql_bicycle_res
         
 #---------------------------------------------------------------------------------------------------
-def do_delete(id, table_name, milvus, mysql):
+def delete_by_id(id, table_name, milvus, mysql):
     #TODO：实现定期删除功能
     if not table_name:
         table_name = MYSQL_TABLE
@@ -96,6 +97,8 @@ def do_delete(id, table_name, milvus, mysql):
     milvus.delete(table_name, "id in [%s]" % ms_data[0][1])
     mysql.delete_by_id(table_name, id)
     return "ok"
+
+
 
 #---------------------------------------------------------------------------------------------------
 def do_count(table_name, milvus):

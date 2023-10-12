@@ -16,8 +16,8 @@ MYSQL_HOST = "127.0.0.1"
 MYSQL_PORT = 3306
 MYSQL_USER = "root"
 MYSQL_PWD = "123456"
-MYSQL_DB = "milvus"
 MYSQL_TABLE = "Primary_table"
+MYSQL_DELETE_INTERVAL = 7 #days
 
 ############### Data Path ###############
 UPLOAD_PATH = "tmp/search-images"

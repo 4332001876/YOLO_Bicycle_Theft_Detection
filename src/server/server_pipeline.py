@@ -19,6 +19,7 @@ class ServerPipeline:
         self.mysql.create_mysql_table(MYSQL_TABLE)
     
     def insert_new_data_from_img(self, img, cam_id):
+    # 主功能一：将监控图像中的自行车插入数据库
         if random.random() > 0.9999:
             self.mysql.auto_delete_ExpiredData(MYSQL_TABLE, delete_interval=MYSQL_DELETE_INTERVAL)
         objs = self.pipeline(img, cam_id=cam_id)
@@ -26,6 +27,12 @@ class ServerPipeline:
             if obj.cls_id == 1:  
                 bike_id = self.milvus.insert_new_bike(obj.embedding)
                 self.insert_bike_occurrence(bike_id, obj)
+
+    def query_img(self, img, cam_id, top_k=10):
+    # 主功能二：接受用户查询，返回前top_k辆相似的自行车，并返回自行车出现的记录
+        objs = self.pipeline(img, cam_id=cam_id)
+        bike_occurrence_res = self.get_bike_occurrence(objs, top_k)
+        return bike_occurrence_res
 
     def insert_bike_occurrence(self, bike_id, obj: DetectedObject):
         bike_occurrence_res = self.get_bike_occurrence([obj], top_k=1)
@@ -37,10 +44,6 @@ class ServerPipeline:
             self.mysql.update_end_time(MYSQL_TABLE, single_bike_occurrence_dict["id"], obj.end_time)
         else:
             self.mysql.insert(MYSQL_TABLE, bike_id, obj)
-
-    def query_img(self, img, cam_id, top_k=10):
-        objs = self.pipeline(img, cam_id=cam_id)
-        bike_occurrence_res = self.get_bike_occurrence(objs, top_k)
         
 
     def get_bike_occurrence(self, objs, top_k=10):

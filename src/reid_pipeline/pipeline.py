@@ -3,7 +3,7 @@ sys.path.append('..')
 
 from reid_pipeline.reid_data_manager import *
 import models.yolox_utils as yolox_utils
-from models.configs.PersonalConfig import PersonalConfig
+from models.configs.PersonalConfigTemplate import PersonalConfig
 
 from fastreid.config import get_cfg
 from fastreid.engine import DefaultTrainer, default_argument_parser, default_setup, launch

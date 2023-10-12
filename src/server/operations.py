@@ -1,8 +1,11 @@
 #  0     1         2             3                     4
 # id,milvus_id,bicycle_id,location_description,feature
-
+import sys
+sys.path.append('..')
 from config import *
-from image_utils import obj_decode, obj_encode
+import server.image_utils as image_utils
+# *? 该文件实现数据库的创建，插入，搜索，按时删除等功能
+
 
 def do_create(table, milvus_client, mysql_cli):
     table_name = table

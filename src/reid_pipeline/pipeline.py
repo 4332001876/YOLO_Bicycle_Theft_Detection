@@ -19,10 +19,11 @@ class Pipeline:
         self.yolox_predictor, self.yolo_args = self.build_yolox_model()
         self.reid_model, self.reid_args, self.reid_cfg = self.build_reid_model()
 
-    def __call__(self, image): #run the pipeline
+    def __call__(self, image, cam_id): #run the pipeline
         objs = self.spot_object_from_image(image)
         objs = self.get_embedding(objs)
         self.submit_result(objs)
+        self.add_extra_info(objs, cam_id)
         return objs
 
     def build_yolox_model(self):
@@ -98,3 +99,6 @@ class Pipeline:
     def submit_result(self, objects: List[DetectedObject]):
         pass
 
+    def add_extra_info(self, objects: List[DetectedObject], cam_id):
+        for obj in objects:
+            obj.cam_id = cam_id

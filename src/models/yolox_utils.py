@@ -222,7 +222,7 @@ class YoloxPredictor(object):
                 bike_person_x1 = min(img.shape[1], int(x1 + 0.4 * (x1 - x0))) #right
                 bike_person_img = img[bike_person_y0:bike_person_y1, bike_person_x0:bike_person_x1]
             center = ((x1+x0)/2, (y1+y0)/2)
-            objs.append(DetectedObject(img=object_img, bike_person_img = bike_person_img, score=score, cls_id=cls_id, center=center))
+            objs.append(DetectedObject(cam_id=0, img=object_img, bike_person_img = bike_person_img, score=score, cls_id=cls_id, center=center)) #cam_id信息交给外部处理
 
         return objs
 

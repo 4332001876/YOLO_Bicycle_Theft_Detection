@@ -16,21 +16,6 @@ def do_create(milvus, mysql):
     milvus.create_collection()
     milvus.create_index()
     return "ok"
-#---------------------------------------------------------------------------------------------------
-#mysql不能直接存储图片信息，下面是两个函数用于将图片信息转化为字符串存储，以及从字符串转化为图片信息
-def obj_encode(obj_image):
-    return base64.b64encode(pickle.dumps(obj_image)).decode() 
-
-def obj_decode(objStr):
-    return pickle.loads(base64.b64decode(objStr))
-
-#承接reid_pipeline的输出，格式转化为Mysql的输入
-def TransformData(DetectedObject):
-    #data: [bicycle_id,camera_id, feature, start_time, end_time]
-    formated_data = []
-    
-    #TODO：这部分还没写完....
-    return formated_data
 
 #---------------------------------------------------------------------------------------------------
 def get_last_endtime_data(mysql_bicycle_res):# *下面do_insert的子函数

@@ -23,13 +23,14 @@ class Tester:
             self.pipeline = None
 
     def test_pipeline(self):
+        cam_id = 0
         # imgs = get_imgs("/home/aistudio/data/data237899/BikePerson/cam_1_2/Bike/Person_00*/cam1_bike_*.jpg")
         imgs=get_imgs(r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_0000\cam1_bike_*.jpg")
 
         start = time.time()
         cnt_obj=0
         for img in imgs:
-            objs = self.pipeline(img)
+            objs = self.pipeline(img, cam_id=cam_id)
             cnt_obj+=len(objs)
         end = time.time()
         num_img = len(imgs)
@@ -56,6 +57,7 @@ class Tester:
         helper.collection.drop()
 
     def test_pipeline_to_milvus(self, person_id=0):
+        cam_id = 0
         helper = MilvusHelper("test")
         path_pattern=r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_%04d\cam*_bike_*.jpg"%person_id
         imgs = get_imgs(path_pattern)
@@ -68,7 +70,7 @@ class Tester:
             helper.create_index()'''
         
         for img in imgs:
-            objs = self.pipeline(img)
+            objs = self.pipeline(img, cam_id=cam_id)
             # print("Number of Objects: ", len(objs))
             for obj in objs:
                 if (obj.cls_id == 1):

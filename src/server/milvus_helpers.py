@@ -114,7 +114,6 @@ class MilvusHelper:
             if(len(search_result[0].distances) > 0 and search_result[0].distances[0] >= DISTANCE_THERSHOLD):
                 return search_result[0].ids[0]
             else:
-                return -1
-            
+                return -1           
         else:
             raise TypeError("bicycle_embedding type error, expect numpy.ndarray or torch.Tensor, got %s"%type(bicycle_embedding))

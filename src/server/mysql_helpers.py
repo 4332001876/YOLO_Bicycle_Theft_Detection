@@ -8,9 +8,12 @@ class MySQLHelper:
                                     user=MYSQL_USER,
                                     port=MYSQL_PORT,
                                     password=MYSQL_PWD,
-                                    database=MYSQL_DB,
+                                    database=None,
                                     local_infile=True)
+        
         self.cursor = self.conn.cursor()
+        self.cursor.execute("CREATE DATABASE IF NOT EXISTS "+MYSQL_DB+" DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;")
+        self.cursor.execute("USE "+MYSQL_DB+";")
 
     def test_connection(self):
         try:

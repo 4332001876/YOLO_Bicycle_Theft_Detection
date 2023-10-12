@@ -16,7 +16,7 @@ MYSQL_HOST = "127.0.0.1"
 MYSQL_PORT = 3306
 MYSQL_USER = "root"
 MYSQL_PWD = "123456"
-MYSQL_DB = "milvus"
+MYSQL_DB = "Bike_Database"
 MYSQL_TABLE = "Primary_table"
 
 ############### Data Path ###############

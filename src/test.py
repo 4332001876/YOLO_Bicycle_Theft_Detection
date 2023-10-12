@@ -92,5 +92,5 @@ class Tester:
 
 
 if __name__ == "__main__":
-    tester = Tester()
+    tester = Tester(has_pipeline=False)
     tester.test_mysql()

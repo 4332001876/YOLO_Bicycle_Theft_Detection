@@ -1,5 +1,4 @@
 from server.config import *
-from server.logs import LOGGER
 from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility
 
 
@@ -66,15 +65,6 @@ class MilvusHelper:
         num = self.collection.num_entities
         return num
 
-        
-    def delete_collection(self, collection_name):
-        self.set_collection(collection_name)
-        self.collection.drop()
-        return "ok"
-
-        
-    
-
     def insert_new_bike(self, collection_name, bicycle_embedding):#TODO:maybe还要改
         # 自行车embedding逐条插入数据库，先在milvus里面检索top1,如果与top1的相似度大于阈值，就不插入，否则插入
         self.set_collection(collection_name)
@@ -86,6 +76,4 @@ class MilvusHelper:
             mr = self.collection.insert(bicycle_embedding)
             id = mr.primary_keys
             self.collection.load()
-            LOGGER.debug(
-                f"Insert vector to Milvus in collection: {collection_name} with one new row")
             return id

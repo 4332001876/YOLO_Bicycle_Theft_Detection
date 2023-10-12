@@ -2,7 +2,7 @@ import sys
 sys.path.append('..')
 from config import *
 import server.image_utils as image_utils
-
+# *！0 |     1    |     2   |   3   |    4     |   5
 # *！id,bicycle_id,camera_id,feature,start_time,end_time
 
 # *? 该文件实现数据库的创建，插入，搜索，按时删除等功能
@@ -18,7 +18,8 @@ def do_create(table, milvus, mysql):
     
 
 
-def get_last_endtime_data(mysql_bicycle_res):
+
+def get_last_endtime_data(mysql_bicycle_res):#下面do_insert的子函数
     #获取每种camera_id下最后一次endtime的数据
     last_endtime_data = {}
     for res in mysql_bicycle_res:
@@ -28,7 +29,7 @@ def get_last_endtime_data(mysql_bicycle_res):
             last_endtime_data[camera_id] = res
     return last_endtime_data
 
-def check_camera_id_exist(last_data, camera_id):
+def check_camera_id_exist(last_data, camera_id):#下面do_insert的子函数
     #在last_data里查找指定camera_id的数据是否存在
     for data in last_data:
         if data[2] == camera_id:
@@ -46,7 +47,7 @@ def do_insert(table_name,milvus, mysql,data):
     bicycle_id = milvus.insert_new_bicycle(MILVUS_TABLE,bicycle_embedding).id
     #在mysql里插入该自行车信息
     mysql_bicycle_res = mysql.serach_by_bicycle_id(bicycle_id,table_name)
-    if len(mysql_bicycle_res) == 0:
+    if len(mysql_bicycle_res) == 0:#若mysql里也没有这条记录，则插入mysql
         mysql.insert(table_name, data)
     else:
         last_data = get_last_endtime_data(mysql_bicycle_res)

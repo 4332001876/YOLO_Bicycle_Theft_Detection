@@ -48,14 +48,16 @@ class MySQLHelper:
         # 单条数据插入，返回最后一行id
         self.test_connection()
         # time_str = "%s"%datetime.fromtimestamp(obj.time)
-        save_folder = UPLOAD_PATH
+
+        # save_img
+        save_folder = SAVE_IMG_PATH
         os.makedirs(save_folder, exist_ok=True)
         img_path = os.path.join(
             save_folder, time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
         )
         img_path = img_path + "_bike_%d"%bike_id + ".jpg"
-
         cv2.imwrite(img_path, obj.bike_person_img)
+        
         sql = "INSERT INTO " + table_name + " "\
             "(bicycle_id, camera_id, start_time, end_time, location_desc, img_path) "+\
             "VALUES (%d, %d, %ld, %ld, '%s', '%s');" % (bike_id, obj.cam_id, int(obj.time), int(obj.time), str(obj.cam_id), img_path)
@@ -71,7 +73,7 @@ class MySQLHelper:
     def search_by_bicycle_id(self, table_name, bike_id):
         self.test_connection()
         sql = "SELECT * from " + \
-            table_name + " where bicycle_id in (%d) ;" % bike_id
+            table_name + " where bicycle_id in (%d) ORDER BY end_time DESC;" % bike_id
         self.cursor.execute(sql)
         results = self.cursor.fetchall() # results类型为嵌套的tuple 
         return results
@@ -80,7 +82,7 @@ class MySQLHelper:
         self.test_connection()
         str_bike_ids = str(list(bike_ids)).replace('[', '').replace(']', '')
         sql = "select * from " + \
-            table_name + " where bicycle_id in (" + str_bike_ids + ");"
+            table_name + " where bicycle_id in (" + str_bike_ids + ") ORDER BY end_time DESC;"
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
         print(results)
@@ -115,3 +117,27 @@ class MySQLHelper:
         self.cursor.close()
         return rows_deleted#返回受影响的列
 
+    def db_line_to_str(self, res):
+        # res: tuple
+        # return: string
+        desc = ""
+        desc += "bicycle_id: %d\n"%res[1]
+        desc += "camera_id: %d\n"%res[2]
+        desc += "start_time: %s\n"%datetime.fromtimestamp(res[3])
+        desc += "end_time: %s\n"%datetime.fromtimestamp(res[4])
+        desc += "location_desc: %s\n"%res[5]
+        desc += "img_path: %s\n"%res[6]
+        return res
+    
+    def db_line_to_dict(self, res):
+        # res: tuple
+        # return: dict
+        desc = {}
+        desc["id"] = res[0]
+        desc["bicycle_id"] = res[1]
+        desc["camera_id"] = res[2]
+        desc["start_time"] = datetime.fromtimestamp(res[3])
+        desc["end_time"] = datetime.fromtimestamp(res[4])
+        desc["location_desc"] = res[5]
+        desc["img_path"] = res[6]
+        return desc

@@ -72,3 +72,10 @@ class MySQLHelper():
         sql = "select count(milvus_id) from " + table_name + ";"
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
+
+    def update(self, table_name, data):
+        # Batch insert (Milvus_ids, img_path) to mysql
+        self.test_connection()
+        sql = "update " + table_name + " set id = '%s',bicycle_id = %s,camera_id = '%s', feature='%s',start_time='%s',edn_time='%s'" % data
+        n = self.cursor.execute(sql)
+        self.conn.commit()

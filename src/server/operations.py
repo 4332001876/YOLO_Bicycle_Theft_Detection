@@ -55,7 +55,7 @@ def do_insert(table_name,milvus, mysql,data):
         else:
             if(data.start_time > check_camera_id_exist[5]):
                 mysql.insert(table_name, data)
-            elif(data.start_time > check_camera_id_exist[4] and data.end_time < check_camera_id_exist[]):
+            elif(data.start_time > check_camera_id_exist[4] and data.end_time < check_camera_id_exist[4]):
                 data.end_time = data.end_time
                 mysql.update(table_name, data)
 

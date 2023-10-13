@@ -228,9 +228,15 @@ mysql -h localhost -u root -p Bike_Database
 ```
 
 ### 启动项目
-安装`requirements.txt`中的依赖包
+- 安装`requirements.txt`中的依赖包
 
+- 在链接：https://rec.ustc.edu.cn/share/0905f400-6979-11ee-b8a8-8b9ab129030e 中下载模型文件，并将其放置于`src/models/weights`目录下
 
+- 将`src\models\configs\PersonalConfigTemplate.py`复制为`src\models\configs\PersonalConfig.py`，并根据自己的情况修改其中的配置
+
+- 在`src`目录下运行`python main.py -mode q`即可启动项目
+
+此后服务器的7860端口（默认端口）就可以获取用户的请求，响应用户的查询
 
 ## 成果展示
 
@@ -256,11 +262,11 @@ mysql -h localhost -u root -p Bike_Database
 
 ### 任务分配
 
-| 姓名   | 贡献 |
-| ------ | ---- |
-| 罗浩铭 | 00   |
-| 谢天   | 00   |
-| 张芷苒 | 00   |
+| 姓名   | 贡献                               |
+| ------ | ---------------------------------- |
+| 罗浩铭 | 目标检测模块，重识别模块，顶层拼接 |
+| 谢天   | 数据库模块                         |
+| 张芷苒 | 前端，文档                         |
 
 ### 遇到的困难
 

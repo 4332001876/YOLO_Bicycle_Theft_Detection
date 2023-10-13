@@ -66,7 +66,7 @@ class BikePersonObject:
 |   img_path    |    varchar(100)     |  YES  |       |  NULL   |                |
 
 
-##milvus
+### milvus
 |     1      |     2     |
 | :--------: | :-------: |
 | bicycle_id | embedding |

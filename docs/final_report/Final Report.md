@@ -240,18 +240,18 @@ mysql -h localhost -u root -p Bike_Database
 
 ## 成果展示
 
-<img src="D:\Code\YOLO\YOLO_Bicycle_Theft_Detection\img\demo1.png" style="zoom:25%;" />
+<img src ="../../img/demo1.png" style="zoom:25%;" />
 
 
 
-<img src="D:\Code\YOLO\YOLO_Bicycle_Theft_Detection\img\demo2.png" style="zoom:25%;" />
+<img src="../../img/demo2.png" style="zoom:25%;" />
 
 
 
-<img src="D:\Code\YOLO\YOLO_Bicycle_Theft_Detection\img\demo3.png" style="zoom:25%;" />
+<img src="../../img/demo3.png" style="zoom:25%;" />
 
 
-
+这三个demo展示了项目运行的UI界面，当用户提交自行车图片后，系统会返回top10的相似度最高的人车匹配记录(命中率79.53%)，以及它们的历史记录与相关信息(监控编号、时间戳、地点等)。用户可以根据这些信息，快速找到自己的自行车的最后出现位置，从而加快寻找被盗自行车的过程。
 
 
 
@@ -263,18 +263,18 @@ mysql -h localhost -u root -p Bike_Database
 ### 任务分配
 
 | 姓名   | 贡献                               |
-| ------ | ---------------------------------- |
+| ------ | ----------------------------------|
 | 罗浩铭 | 目标检测模块，重识别模块，顶层拼接 |
-| 谢天   | 数据库模块                         |
-| 张芷苒 | 前端，文档                         |
+| 谢天   | 数据库交互模块，目标检测调研       |
+| 张芷苒 | 前端，文档                        |
 
 ### 遇到的困难
 
-你们来写一点吧。
+
 
 ### 开发感悟
 
-天哥来扯一点。可以根据给分表讲讲可移植性什么的...
+
 
 
 

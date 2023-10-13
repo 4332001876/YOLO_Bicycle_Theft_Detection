@@ -19,11 +19,15 @@ class QuerySystemBackend:
             
             # self.top_k = gr.Slider(5, 50, value=TOP_K, step=1, label="Number of query results")
 
-            
+            gr.Markdown("## Query Image:")
             with gr.Row():
                 image_input = gr.Image()
             
             image_button = gr.Button("Query")
+
+            gr.Markdown("## Query Results:")
+            gr.Markdown("The following search results are sorted by similarity. ")
+            gr.Markdown("If the search results are empty, it may be because the bicycle in the query image was not recognized. Please try using another image.")
 
             ui_content=[]
             for _ in range(self.top_k):

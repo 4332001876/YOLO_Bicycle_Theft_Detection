@@ -37,7 +37,7 @@ class ServerPipeline:
             objs = [obj for obj in objs if obj.cls_id == 1]
             obj = max(objs, key=lambda x: x.score*x.img.shape[0]*x.img.shape[1])
             bike_occurrence_res = self.get_bike_occurrence(obj, top_k)
-            print("len of bike_occurrence_res: ", len(bike_occurrence_res))
+            # print("len of bike_occurrence_res: ", len(bike_occurrence_res))
             for item in bike_occurrence_res: # list of (bike_id, res)
                 item[1] = self.mysql.search_result_to_df(item[1])
                 if item[1].shape[0] > 0:

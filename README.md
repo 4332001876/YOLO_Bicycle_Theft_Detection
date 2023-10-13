@@ -1,4 +1,4 @@
 # YOLO_Bicycle_Theft_Detection
 BikeReid
 
-<img src="D:\Code\YOLO\YOLO_Bicycle_Theft_Detection\docs\project docs\images\logo.png" style="zoom:67%;" />
+<img src="img/logo.png" width="90%">

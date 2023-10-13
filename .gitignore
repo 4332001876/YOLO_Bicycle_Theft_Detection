@@ -19,6 +19,7 @@ PersonalConfig.py
 log.txt
 *.pyc
 /src/tmp
+/env/milvus/volumes
 
 #文档草稿
 /docs/draft

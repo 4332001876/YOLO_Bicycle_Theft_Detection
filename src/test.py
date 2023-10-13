@@ -123,12 +123,13 @@ class Tester:
 
         manager = SurveillanceCameraManager(self.server_pipeline, 0, camera_url=0)
         #manager.run()
-        path_pattern=r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_001*\cam*_bike_*1.jpg"
+        path_pattern=r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_001*\cam*_bike_0*.jpg"
         manager.read_img(path_pattern)
+        print("Number of Entities in MilvusDb:", self.server_pipeline.milvus.get_num_entities())
 
 if __name__ == "__main__":
-    # tester = Tester(has_pipeline=False)
-    # tester.test_surveiliance(new_database=True)
-    # tester.test_frontend()
-    tester = Tester(has_pipeline=True)
-    tester.check_embedding_output()
+    tester = Tester(has_pipeline=False)
+    tester.test_surveiliance(new_database=True)
+    tester.test_frontend()
+    # tester = Tester(has_pipeline=True)
+    # tester.check_embedding_output()

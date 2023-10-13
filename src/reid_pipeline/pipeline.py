@@ -14,6 +14,7 @@ from models import BikePerson
 from typing import List
 import torch
 
+
 class Pipeline:
     def __init__(self):
         self.yolox_predictor, self.yolo_args = self.build_yolox_model()
@@ -35,7 +36,7 @@ class Pipeline:
         yolox_args.exp_file = PersonalConfig().yolox_exp_file
         yolox_args.ckpt = PersonalConfig().yolox_ckpt
         yolox_args.path = PersonalConfig().yolox_path
-        yolox_args.conf = 0.25
+        yolox_args.conf = 0.45
         yolox_args.nms = 0.45
         yolox_args.tsize = 640
         yolox_args.save_result = True
@@ -77,6 +78,7 @@ class Pipeline:
         model = DefaultTrainer.build_model(cfg)
         Checkpointer(model).load(cfg.MODEL.WEIGHTS)  # load trained model
         model.training = False
+        model.eval()
         
         return model, args, cfg
 
@@ -110,8 +112,7 @@ class Pipeline:
             if self.reid_cfg.MODEL.DEVICE == "cuda":
                 inputs = inputs.cuda()
             outputs = self.reid_model(inputs)
-            embeddings = outputs["features"]
-            obj.embedding = embeddings[0]
+            obj.embedding = outputs[0]
             print(obj.embedding)
         return objects
 

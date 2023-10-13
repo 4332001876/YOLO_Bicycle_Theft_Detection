@@ -212,7 +212,7 @@ class YoloxPredictor(object):
             y0 = int(box[1])
             x1 = int(box[2])
             y1 = int(box[3])
-
+            
             object_img = img[y0:y1, x0:x1]
             bike_person_img = None
             if cls_id == 1: #bicycle

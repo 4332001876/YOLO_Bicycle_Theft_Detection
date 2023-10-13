@@ -68,8 +68,8 @@ yolo算法设计快速、准确且易于使用，使其成为各种物体检测�
 针对监控画质难题，仅仅利用现有的yolo模型无法胜任此任务。故训练了自己的BikeReid模型是重中之重。
 <img src="../../img/camrea_problem.png" width = "70%">
 训练的AI模型负责将分割出的人车图像分别送入模型进行跨摄像头重识别，得到自行车的特征向量，是本项目核心所在。
-Reid功能
-<img src="../../img/reid.png" width = "70%">
+下面是BikeReid模型与其余几个模型的效果对比图：
+<img src="../../img/model_eval.png" width = "50%">
 功能：
 
 - 接收分割出的人车图像
@@ -119,9 +119,6 @@ Reid功能
 - bicycle_embedding ：某辆自行车通过reid管线生成的2048维特征向量
 
   
-
-
-
 
 
 ### UI界面模块

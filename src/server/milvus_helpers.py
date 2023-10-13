@@ -92,7 +92,7 @@ class MilvusHelper:
             
         if isinstance(bicycle_embedding, np.ndarray):
             bicycle_embedding = bicycle_embedding.astype(np.float32)
-            if(len(search_result[0].distances) > 0 and search_result[0].distances[0] >= DISTANCE_THERSHOLD):
+            if(len(search_result[0].distances) > 0 and search_result[0].distances[0] < DISTANCE_THERSHOLD):
                 return search_result[0].ids[0]
             else:
                 mr = self.collection.insert([[bicycle_embedding]])
@@ -115,7 +115,7 @@ class MilvusHelper:
             
         if isinstance(bicycle_embedding, np.ndarray):
             bicycle_embedding = bicycle_embedding.astype(np.float32)
-            if(len(search_result[0].distances) > 0 and search_result[0].distances[0] >= DISTANCE_THERSHOLD):
+            if(len(search_result[0].distances) > 0 and search_result[0].distances[0] < DISTANCE_THERSHOLD):
                 return search_result[0].ids[0]
             else:
                 return -1           

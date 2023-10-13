@@ -5,6 +5,7 @@ from server.mysql_helpers import MySQLHelper
 
 import random
 
+from datetime import datetime
 
 # *? 该文件实现数据库的创建，插入，搜索，按时删除等功能
 # |   0   |     1      |     2     |     3      |    4     |       5       |    6     |
@@ -32,14 +33,24 @@ class ServerPipeline:
     # 主功能二：接受用户查询，返回前top_k辆相似的自行车，并返回自行车出现的记录
         objs = self.pipeline(img, cam_id=-1)
         bike_occurrence_res = self.get_bike_occurrence(objs, top_k)
-        imgs_path = []
+        ui_content = []
         for item in bike_occurrence_res: # list of (bike_id, res)
             item[1] = self.mysql.search_result_to_df(item[1])
             if item[1].shape[0] > 0:
-                imgs_path.append(item[1]["img_path"][0])
-        #if len(imgs_path) == 0:
-            #return ["Not A Bike!"]
-        return imgs_path
+                ui_content.append(item[1]["img_path"][0])
+                df = item[1].drop(["img_path"], axis=1)
+                df["start_time"] = df["start_time"].apply(lambda x: datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S"))
+                df["end_time"] = df["end_time"].apply(lambda x: datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S"))
+                ui_content.append(df)
+
+        if len(ui_content) < 20:
+            for i in range(20-len(ui_content)):
+                if i % 2 == 0:
+                    ui_content.append("server/src/no_result_found.png")
+                else:
+                    ui_content.append(None)
+        
+        return ui_content
 
     
 
@@ -48,7 +59,7 @@ class ServerPipeline:
         single_bike_occurrence_res = None
         for res in bike_occurrence_res:
             single_bike_occurrence_res = res[1]
-        if len(single_bike_occurrence_res)>0:
+        if single_bike_occurrence_res is not None and len(single_bike_occurrence_res)>0:
             single_bike_occurrence_dict = self.mysql.db_line_to_dict(single_bike_occurrence_res[0])
             if obj.cam_id == single_bike_occurrence_dict["camera_id"]:
                 self.mysql.update_end_time(MYSQL_TABLE, single_bike_occurrence_dict["id"], obj.time)

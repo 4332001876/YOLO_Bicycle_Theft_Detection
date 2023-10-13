@@ -108,14 +108,18 @@ class Tester:
         backend = QuerySystemBackend(self.server_pipeline)
         backend.launch()
 
-    def test_surveiliance(self):
+    def test_surveiliance(self, new_database=False):
         self.server_pipeline = ServerPipeline()
+        if new_database:
+            self.server_pipeline.milvus.collection.drop()
+            self.server_pipeline = ServerPipeline()
 
         manager = SurveillanceCameraManager(self.server_pipeline, 0, camera_url=0)
         #manager.run()
-        path_pattern=r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_00*\cam*_bike_*1.jpg"
+        path_pattern=r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_001*\cam*_bike_*1.jpg"
         manager.read_img(path_pattern)
 
 if __name__ == "__main__":
     tester = Tester(has_pipeline=False)
+    tester.test_surveiliance(new_database=True)
     tester.test_frontend()

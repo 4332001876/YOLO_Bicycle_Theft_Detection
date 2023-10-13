@@ -5,11 +5,11 @@ MILVUS_DB_NAME = "Bike_VecDb"
 MILVUS_HOST = "127.0.0.1"
 MILVUS_PORT =  19530
 VECTOR_DIMENSION = 2048
-METRIC_TYPE = "COSINE"
+METRIC_TYPE = "L2"
 MILVUS_TABLE = "similarity_search"
 TOP_K = 10
 INDEX_TYPE = "FLAT"
-DISTANCE_THERSHOLD =  0.999
+DISTANCE_THERSHOLD =  0.2
 
 
 ############### MySQL Configuration ###############

@@ -48,6 +48,7 @@ class BikePersonObject:
 
 
 ### MySQL
+
 |   0   |     1      |     2     |     3      |    4     |       5       |    6     |
 | :---: | :--------: | :-------: | :--------: | :------: | :-----------: | :------: |
 |  id   | bicycle_id | camera_id | start_time | end_time | location_desc | img_path |
@@ -63,3 +64,9 @@ class BikePersonObject:
 |   end_time    |     bigint(20)      |  YES  |       |  NULL   |                |
 | location_desc |     varchar(50)     |  YES  |       |  NULL   |                |
 |   img_path    |    varchar(100)     |  YES  |       |  NULL   |                |
+
+
+### milvus
+|     1      |     2     |
+| :--------: | :-------: |
+| bicycle_id | embedding |

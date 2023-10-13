@@ -140,7 +140,7 @@ DeepSORT中采用了**一个简单（运算量不大）**的CNN来提取被检�
 
 ### 类间调用示意图
 
-<img src="D:\Code\YOLO\YOLO_Bicycle_Theft_Detection\docs\survey_report\src\module_relationship.jpg" style="zoom: 33%;" />
+<img src="\src\module_relationship.jpg" style="zoom: 33%;" />
 
 
 

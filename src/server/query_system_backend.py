@@ -22,13 +22,24 @@ class QuerySystemBackend:
             
             with gr.Row():
                 image_input = gr.Image()
-                image_output = [gr.Gallery(label="Result", columns=(2,5))]
-
-            with gr.Accordion("See Details"):
-                gr.Markdown("lorem ipsum")
-                
+            
             image_button = gr.Button("Query")
-            image_button.click(fn=self.server_pipeline.query_img, inputs=image_input, outputs=image_output, api_name="greet")
+
+            ui_content=[]
+            for _ in range(self.top_k):
+                with gr.Row():
+                    image_output = gr.Image(type="filepath", label=None)
+                    ui_content.append(image_output)
+                    table_output = gr.DataFrame(type="pandas", label=None)
+                    ui_content.append(table_output)
+
+
+
+            #with gr.Accordion("See Details"):
+                #gr.Markdown("lorem ipsum")
+                
+            
+            image_button.click(fn=self.server_pipeline.query_img, inputs=image_input, outputs=ui_content, api_name="greet")
 
             
         return page

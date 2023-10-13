@@ -3,6 +3,9 @@ from reid_pipeline import Pipeline, DetectedObject
 
 from server.milvus_helpers import MilvusHelper
 from server.mysql_helpers import MySQLHelper
+from server.server_pipeline import ServerPipeline
+from server.surveillance_camera_manager import SurveillanceCameraManager
+from server.query_system_backend import QuerySystemBackend
 
 import numpy as np
 import cv2
@@ -100,7 +103,19 @@ class Tester:
         mysql.search_by_bicycle_ids("test", [1])
         mysql.auto_delete_ExpiredData("test")
 
+    def test_frontend(self):
+        self.server_pipeline = ServerPipeline()
+        backend = QuerySystemBackend(self.server_pipeline)
+        backend.launch()
+
+    def test_surveiliance(self):
+        self.server_pipeline = ServerPipeline()
+
+        manager = SurveillanceCameraManager(self.server_pipeline, 0, camera_url=0)
+        #manager.run()
+        path_pattern=r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_00*\cam*_bike_*1.jpg"
+        manager.read_img(path_pattern)
 
 if __name__ == "__main__":
     tester = Tester(has_pipeline=False)
-    tester.test_mysql()
+    tester.test_frontend()

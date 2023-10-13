@@ -1,10 +1,15 @@
 import pymysql
+import cv2
+import pandas as pd
+
+import time
+
+
 from server.config import *
 from datetime import datetime, timedelta
 from reid_pipeline.reid_data_manager import DetectedObject
 
-import cv2
-import time
+
 
 class MySQLHelper:
     def __init__(self):
@@ -141,3 +146,9 @@ class MySQLHelper:
         desc["location_desc"] = res[5]
         desc["img_path"] = res[6]
         return desc
+    
+    def search_result_to_df(self,res):
+        # res: tuple
+        # return: dataframe
+        df = pd.DataFrame(list(res), columns=["id", "bicycle_id", "camera_id", "start_time", "end_time", "location_desc", "img_path"])
+        return df

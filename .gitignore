@@ -22,7 +22,7 @@ log.txt
 
 #文档草稿
 /docs/draft
-
+*.pdf
 /.idea
 
 

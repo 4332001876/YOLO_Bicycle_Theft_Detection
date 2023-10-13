@@ -4,9 +4,7 @@
 
 ### 开发背景
 
-随着大学校园中自行车的日益普及，自行车盗窃事件也成为了一个日益严重的问题。对于忙于学业的大学生而言，一旦自行车遗失，寻找自行车或报备给保安部门查询监控成为了一项既耗时又无法保证效果的任务。为了更高效地帮助学生及时得知自行车的异常移动，并快速定位到疑似盗窃者和自行车的最后出现位置，我们采用了YOLO
-(You Only Look Once)
-算法，创建了一个实时监测自行车是否遭到非法使用的系统。
+随着大学校园中自行车的日益普及，自行车盗窃事件也成为了一个日益严重的问题。对于忙于学业的大学生而言，一旦自行车遗失，寻找自行车或报备给保安部门查询监控成为了一项既耗时又无法保证效果的任务。为了更高效地帮助学生及时得知自行车的异常移动，并快速定位到疑似盗窃者和自行车的最后出现位置，我们采用了YOLO (You Only Look Once)[^yolo]算法，并使用ReID算法（基于FastReID框架[^fast_reid]），创建了一个找回系统。系统在监控端实时监测自行车位置，并且在用户端提供查询接口，用户输入自己自行车的图片就可找到其最近的出现位置。
 
 在系统的初始学习阶段，我们利用校园内的监控资料，提取了每辆自行车与其骑手的图像，对其进行分类标记，确保了人车匹配的准确性。在后续的实时检测过程中，一旦系统侦测到之前未标记过的人车组合，它将自动标记并记录此次异常，并发出警报。若学生发现自己的自行车不翼而飞，他们可以直接在系统上上传自己自行车的照片。系统会立即返回历史捕捉到该自行车与不匹配骑者的监控记录及对应的地点，这不仅帮助车主迅速了解自行车的最后出现位置，还可以获取疑似盗窃者的图像，大大加速了寻找自行车的过程。
 
@@ -89,7 +87,7 @@
 
 #### 目标检测模块
 
-本模块利用YOLOX-m模型，基于YOLOv8目标检测算法，对输入视频进行分析，准确地识别并定位自行车和人。
+本模块利用YOLOX-m模型，基于YOLOx目标检测算法，对输入视频进行分析，准确地识别并定位自行车和人。
 
 **主要功能**：
 
@@ -129,27 +127,21 @@
 
 **主要功能**：
 
--   利用mysql存储和管理关系数据。存储字段包括：
+- 利用mysql存储和管理自行车出现记录数据。存储字段包括：
 
-    -   pair_id (主键, 创建索引，与milvus中的pair_id相同)
+|     Field     |       Description        |        Type         | Null  |  Key  | Default |     Extra      |
+| :-----------: | :----------------------: | :-----------------: | :---: | :---: | :-----: | :------------: |
+|      id       |           主键           | bigint(20) unsigned |  NO   |  PRI  |  NULL   | auto_increment |
+|  bicycle_id   |        自行车编号        | bigint(20) unsigned |  YES  |  MUL  |  NULL   |                |
+|   camera_id   |        摄像头编号        |  int(10) unsigned   |  YES  |       |  NULL   |                |
+|  start_time   |       起始出现时间       |     bigint(20)      |  YES  |       |  NULL   |                |
+|   end_time    |       终止出现时间       |     bigint(20)      |  YES  |       |  NULL   |                |
+| location_desc |       出现位置描述       |     varchar(50)     |  YES  |       |  NULL   |                |
+|   img_path    | 相应监控画面截图存储位置 |    varchar(100)     |  YES  |       |  NULL   |                |
 
-    -   bicycle_id (外键, 关联至bicycle_photos表)
-
-    -   person_id (外键, 关联至person_photos表)
-
-    -   create_date (创建日期)
-
-    -   camera_id (摄像机ID)
-
-    -   modify_date (修改日期)
-
--   使用milvus存储和查询特征向量。存储字段包括：
-
-    -   pair_id (主键, 创建索引)
-
-    -   bicycle_embedding (自行车特征向量)
-
-    -   person_embedding (人特征向量)
+- 使用milvus存储和查询特征向量，用于以embedding查询自行车身份。存储字段包括：
+    -   bike_id (主键)
+    -   bicycle_embedding (自行车特征向量，创建向量索引，2048维)
 
 -   提供接口供其他模块调用和查询。
 
@@ -266,6 +258,8 @@ Re-ID模型获取一个对象的embedding耗时0.5-0.6s（图像大小不影响�
 
 [^bike_dataset]: Yuan, Yuan, et al. “Bike-Person Re-Identification: A Benchmark and a Comprehensive Evaluation.” IEEE Access, vol. 6, Institute of Electrical and Electronics Engineers, Jan. 2018, pp. 56059–68. https://doi.org/10.1109/access.2018.2872804.
 
+[^yolo]: Redmon, Joseph, et al. “You Only Look Once: Unified, Real-Time Object Detection.” arXiv (Cornell University), June 2015, export.arxiv.org/pdf/1506.02640.
 
+[^fast_reid]: He, Lingxiao, et al. “FastReID: A Pytorch Toolbox for General Instance Re-identification.” arXiv (Cornell University), Cornell University, June 2020, https://doi.org/10.48550/arxiv.2006.02631.
 
 

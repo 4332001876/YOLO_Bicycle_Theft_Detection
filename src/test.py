@@ -129,7 +129,7 @@ class Tester:
 
 if __name__ == "__main__":
     tester = Tester(has_pipeline=False)
-    tester.test_surveiliance(new_database=True)
+    # tester.test_surveiliance(new_database=True)
     tester.test_frontend()
     # tester = Tester(has_pipeline=True)
     # tester.check_embedding_output()

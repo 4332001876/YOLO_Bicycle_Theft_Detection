@@ -23,8 +23,8 @@ class Pipeline:
     def __call__(self, image, cam_id): #run the pipeline
         objs = self.spot_object_from_image(image)
         objs = self.get_embedding(objs)
-        self.submit_result(objs)
         self.add_extra_info(objs, cam_id)
+        objs = [obj for obj in objs if obj.cls_id == 1]
         return objs
 
     def build_yolox_model(self):
@@ -36,7 +36,7 @@ class Pipeline:
         yolox_args.exp_file = PersonalConfig().yolox_exp_file
         yolox_args.ckpt = PersonalConfig().yolox_ckpt
         yolox_args.path = PersonalConfig().yolox_path
-        yolox_args.conf = 0.45
+        yolox_args.conf = 0.25
         yolox_args.nms = 0.45
         yolox_args.tsize = 640
         yolox_args.save_result = True

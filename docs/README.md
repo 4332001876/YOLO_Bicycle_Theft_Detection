@@ -1,5 +1,7 @@
 # 简介
-YOLO_Bicycle_Theft_Detection项目文档
+BikeReid项目文档
+
+<img src="D:\Code\YOLO\YOLO_Bicycle_Theft_Detection\docs\project docs\images\logo.png" style="zoom: 80%;" />
 
 # 文档子结构说明
 - survey report: 调研报告

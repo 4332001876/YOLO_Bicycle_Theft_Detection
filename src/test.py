@@ -49,6 +49,13 @@ class Tester:
             #if obj.cls_id == 1:  
                 #cv2.imwrite("cyka.jpg",obj.bike_person_img)
 
+    def check_embedding_output(self):
+        imgs = get_imgs(r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_0000\cam*_bike_*0.jpg")
+        for img in imgs:
+            objs = self.pipeline(img, cam_id=0)
+            for obj in objs:
+                print(obj.embedding)
+
     def test_milvus(self):
         helper = MilvusHelper()
         helper.create_collection("test")
@@ -120,6 +127,8 @@ class Tester:
         manager.read_img(path_pattern)
 
 if __name__ == "__main__":
-    tester = Tester(has_pipeline=False)
-    tester.test_surveiliance(new_database=True)
-    tester.test_frontend()
+    # tester = Tester(has_pipeline=False)
+    # tester.test_surveiliance(new_database=True)
+    # tester.test_frontend()
+    tester = Tester(has_pipeline=True)
+    tester.check_embedding_output()

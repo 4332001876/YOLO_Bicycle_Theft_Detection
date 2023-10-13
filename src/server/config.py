@@ -8,8 +8,8 @@ VECTOR_DIMENSION = 2048
 METRIC_TYPE = "COSINE"
 MILVUS_TABLE = "similarity_search"
 TOP_K = 10
-INDEX_TYPE = "IVF_FLAT"
-DISTANCE_THERSHOLD =  0.992
+INDEX_TYPE = "FLAT"
+DISTANCE_THERSHOLD =  0.999
 
 
 ############### MySQL Configuration ###############

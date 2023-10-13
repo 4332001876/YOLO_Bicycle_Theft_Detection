@@ -65,7 +65,13 @@ class MilvusHelper:
 
     def search_vectors(self, vectors, top_k):
         # Search vector in milvus collection
+        for i, vector in enumerate(vectors):
+            if isinstance(vector, torch.Tensor):
+                vectors[i] = vector.detach().numpy()
+            if isinstance(vector, np.ndarray):
+                vectors[i] = vector.astype(np.float32)
         self.set_collection()
+        self.collection.load()
         search_params = {"metric_type": METRIC_TYPE, "params": {"nprobe": 16}}
         res = self.collection.search(vectors, anns_field="bicycle_embedding", param=search_params, limit=top_k)
         return res 

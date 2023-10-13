@@ -28,7 +28,8 @@ class Pipeline:
 
     def build_yolox_model(self):
         # get_yolox_predictor
-        yolox_args = yolox_utils.make_parser().parse_args()
+        yolox_args = yolox_utils.make_parser()
+        yolox_args.parse_known_args()
         yolox_args.demo = "image"
         yolox_args.name = "yolox-m"
         yolox_args.exp_file = PersonalConfig().yolox_exp_file
@@ -38,6 +39,14 @@ class Pipeline:
         yolox_args.nms = 0.45
         yolox_args.tsize = 640
         yolox_args.save_result = True
+
+        yolox_args.experiment_name = None
+        yolox_args.camid = 0
+        yolox_args.fp16 = False
+        yolox_args.legacy = False
+        yolox_args.fuse = False 
+        yolox_args.trt = False
+
         if torch.cuda.is_available():
             yolox_args.device = "gpu"
         else:
@@ -47,10 +56,19 @@ class Pipeline:
 
     def build_reid_model(self):
         # get_reid_model
-        args = default_argument_parser().parse_args()
+        args = default_argument_parser()
+        args.parse_known_args()
+
         args.config_file = "models/configs/bagtricks_R50-ibn market1501.yml"
         args.num_gpus = 0
         args.eval_only = True
+
+        args.num_machines = 1
+        args.machine_rank = 0
+        port = 2 ** 15 + 2 ** 14 + hash(os.getuid() if sys.platform != "win32" else 1) % 2 ** 14
+        args.dist_url = "tcp://127.0.0.1:{}".format(port)
+        args.opts = None
+
         print("Command Line Args:", args)
 
         cfg = self.reid_setup(args)
@@ -68,7 +86,8 @@ class Pipeline:
         """
         cfg = get_cfg()
         cfg.merge_from_file(args.config_file)
-        cfg.merge_from_list(args.opts)
+        if args.opts is not None:
+            cfg.merge_from_list(args.opts)
         cfg.freeze()
         default_setup(cfg, args)
         return cfg
@@ -87,13 +106,13 @@ class Pipeline:
     def get_embedding(self, objects: List[DetectedObject]):
         for obj in objects:
             inputs = torch.from_numpy(obj.img).unsqueeze(0).permute(0,3,1,2).float()
-            inputs = inputs / 255.0
             inputs = torch.concat([inputs,inputs], dim=0) #fix batchsize=1 bug
             if self.reid_cfg.MODEL.DEVICE == "cuda":
                 inputs = inputs.cuda()
             outputs = self.reid_model(inputs)
             embeddings = outputs["features"]
             obj.embedding = embeddings[0]
+            print(obj.embedding)
         return objects
 
     def submit_result(self, objects: List[DetectedObject]):

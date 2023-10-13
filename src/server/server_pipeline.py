@@ -48,7 +48,7 @@ class ServerPipeline:
         single_bike_occurrence_res = None
         for res in bike_occurrence_res:
             single_bike_occurrence_res = res[1]
-        if len(single_bike_occurrence_res)>0:
+        if single_bike_occurrence_res is not None and len(single_bike_occurrence_res)>0:
             single_bike_occurrence_dict = self.mysql.db_line_to_dict(single_bike_occurrence_res[0])
             if obj.cam_id == single_bike_occurrence_dict["camera_id"]:
                 self.mysql.update_end_time(MYSQL_TABLE, single_bike_occurrence_dict["id"], obj.time)

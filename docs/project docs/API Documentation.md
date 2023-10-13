@@ -67,6 +67,6 @@ class BikePersonObject:
 
 
 ### milvus
-|     1      |     2     |
+|     0      |     1    |
 | :--------: | :-------: |
 | bicycle_id | embedding |

@@ -231,6 +231,37 @@ Re-ID模型获取一个对象的embedding耗时0.5-0.6s（图像大小不影响�
 
 ## 用户指南
 
+### 用户端使用
+用户只需在图片输入框中输入自己的自行车图片，点击检索按钮，即可获得查询结果
+
+查询结果包括前十个相似度最高的自行车，以及它们相应的出现记录
+
+### 服务器端使用
+
+本项目需要在milvus服务与mysql服务开启的情况下运行
+
+### 启动milvus服务
+在docker开启的情况下，运行以下命令启动milvus服务
+```bash
+cd <project_path>/env/milvus
+docker-compose up -d
+```
+
+若容器已构建，可直接运行`docker start [OPTIONS] CONTAINER [CONTAINER...]`命令启动milvus服务
+
+### 启动mysql服务
+在mysql官网下载安装MySQL 5.x版本
+
+安装完毕后，新建database命名为Bike_Database，运行以下命令启动mysql服务
+
+```bash
+mysql -h localhost -u root -p Bike_Database
+```
+
+### 启动项目
+安装`requirements.txt`中的依赖包
+
+
 
 
 ## 项目总结

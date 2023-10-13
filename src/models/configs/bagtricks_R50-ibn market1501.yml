@@ -1,7 +1,7 @@
 _BASE_: ./Base-bagtricks.yml
 
 MODEL:
-  WEIGHTS: "D:/Python/Great Project/YOLO_Bicycle_Theft_Detection/src/models/weights/bike_model_bot_R50_ibn.pth"
+  WEIGHTS: "models/weights/bike_model_bot_R50_ibn.pth"
   BACKBONE:
     WITH_IBN: True
 

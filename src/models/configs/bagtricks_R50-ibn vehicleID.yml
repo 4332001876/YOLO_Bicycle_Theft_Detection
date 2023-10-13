@@ -5,7 +5,7 @@ INPUT:
   SIZE_TEST: [256, 256]
 
 MODEL:
-  WEIGHTS: "D:/Python/Great Project/YOLO_Bicycle_Theft_Detection/src/models/weights/vehicleid_bot_R50-ibn.pth"
+  WEIGHTS: "models/weights/vehicleid_bot_R50-ibn.pth"
   BACKBONE:
     WITH_IBN: True
   HEADS:

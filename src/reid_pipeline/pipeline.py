@@ -22,9 +22,9 @@ class Pipeline:
 
     def __call__(self, image, cam_id): #run the pipeline
         objs = self.spot_object_from_image(image)
+        objs = [obj for obj in objs if (obj.cls_id == 1 and obj.img.shape[0] > 30 and obj.img.shape[1] > 30)]
         objs = self.get_embedding(objs)
-        self.add_extra_info(objs, cam_id)
-        objs = [obj for obj in objs if obj.cls_id == 1]
+        self.add_extra_info(objs, cam_id)     
         return objs
 
     def build_yolox_model(self):

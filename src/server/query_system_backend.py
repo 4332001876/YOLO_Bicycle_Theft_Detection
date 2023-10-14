@@ -4,6 +4,8 @@ from server.config import TOP_K
 import gradio as gr
 import pandas as pd
 
+import os
+
 
 class QuerySystemBackend:
     def __init__(self, server_pipeline: ServerPipeline):
@@ -14,16 +16,29 @@ class QuerySystemBackend:
     def build_page(self):
         
         with gr.Blocks() as page:
-            gr.Markdown("# Bicycle Re-ID")
-            gr.Markdown("Input a picture of your bicycle to find its recent location.")
-            
-            # self.top_k = gr.Slider(5, 50, value=TOP_K, step=1, label="Number of query results")
+            with gr.Box():
+                with gr.Row():
+                    #gr.Image("server/src/BikeReID-logo2-s.jpg", shape=(50,50), container=False, show_download_button=False)
+                    gr.HTML("<h1>Bicycle Re-ID</h1>")
+                gr.Markdown("Input a picture of your bicycle to find its recent location.")
+                
+                # self.top_k = gr.Slider(5, 50, value=TOP_K, step=1, label="Number of query results")
 
-            gr.Markdown("## Query Image:")
-            with gr.Row():
-                image_input = gr.Image()
-            
-            image_button = gr.Button("Query")
+                gr.Markdown("## Query Image:")
+                with gr.Row():
+                    with gr.Column(scale=1):
+                        gr.Markdown(" ")
+                    image_input = gr.Image(scale = 2)
+                    with gr.Column(scale=1):
+                        gr.Markdown(" ")
+                
+                with gr.Row():
+                    with gr.Column(scale=2):
+                        gr.Markdown(" ")
+                    image_button = gr.Button("Query",scale=1)
+                    with gr.Column(scale=2):
+                        gr.Markdown(" ")
+                
 
             gr.Markdown("## Query Results:")
             gr.Markdown("The following search results are sorted by similarity. ")
@@ -32,10 +47,12 @@ class QuerySystemBackend:
             ui_content=[]
             for _ in range(self.top_k):
                 with gr.Row():
-                    image_output = gr.Image(type="filepath", label=None)
-                    ui_content.append(image_output)
-                    table_output = gr.DataFrame(type="pandas", label=None)
-                    ui_content.append(table_output)
+                    with gr.Column(scale=1):
+                        image_output = gr.Image(type="filepath", label=None, container = True)
+                        ui_content.append(image_output)
+                    with gr.Column(scale=2):
+                        table_output = gr.DataFrame(type="pandas", label=None)
+                        ui_content.append(table_output)
 
 
 

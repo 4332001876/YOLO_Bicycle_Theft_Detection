@@ -57,7 +57,7 @@ class MilvusHelper:
         self.set_collection()
         if self.collection.has_index():
             return None
-        default_index = {"index_type": "IVF_FLAT", "metric_type": METRIC_TYPE, "params": {"nlist": 16384}}
+        default_index = {"index_type": INDEX_TYPE, "metric_type": METRIC_TYPE, "params": {"nlist": 16384}}
         # * nlist:16384后续可注意是否修改
         status = self.collection.create_index(field_name="bicycle_embedding", index_params=default_index, timeout=60)
         return status

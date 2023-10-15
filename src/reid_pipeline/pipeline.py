@@ -1,18 +1,15 @@
+import torch.nn.functional as F
+import torch
+from typing import List
+from models import BikePerson
+from fastreid.utils.checkpoint import Checkpointer
+from fastreid.engine import DefaultTrainer, default_argument_parser, default_setup, launch
+from fastreid.config import get_cfg
+from models.configs.PersonalConfigTemplate import PersonalConfig
+import models.yolox_utils as yolox_utils
+from reid_pipeline.reid_data_manager import *
 import sys
 sys.path.append('..')
-
-from reid_pipeline.reid_data_manager import *
-import models.yolox_utils as yolox_utils
-from models.configs.PersonalConfigTemplate import PersonalConfig
-
-from fastreid.config import get_cfg
-from fastreid.engine import DefaultTrainer, default_argument_parser, default_setup, launch
-from fastreid.utils.checkpoint import Checkpointer
-
-from models import BikePerson
-
-from typing import List
-import torch
 
 
 class Pipeline:
@@ -20,11 +17,12 @@ class Pipeline:
         self.yolox_predictor, self.yolo_args = self.build_yolox_model()
         self.reid_model, self.reid_args, self.reid_cfg = self.build_reid_model()
 
-    def __call__(self, image, cam_id): #run the pipeline
+    def __call__(self, image, cam_id):  # run the pipeline
         objs = self.spot_object_from_image(image)
-        objs = [obj for obj in objs if (obj.cls_id == 1 and obj.img.shape[0] > 30 and obj.img.shape[1] > 30)]
+        objs = [obj for obj in objs if (
+            obj.cls_id == 1 and obj.img.shape[0] > 30 and obj.img.shape[1] > 30)]
         objs = self.get_embedding(objs)
-        self.add_extra_info(objs, cam_id)     
+        self.add_extra_info(objs, cam_id)
         return objs
 
     def build_yolox_model(self):
@@ -45,7 +43,7 @@ class Pipeline:
         yolox_args.camid = 0
         yolox_args.fp16 = False
         yolox_args.legacy = False
-        yolox_args.fuse = False 
+        yolox_args.fuse = False
         yolox_args.trt = False
 
         if torch.cuda.is_available():
@@ -53,7 +51,7 @@ class Pipeline:
         else:
             yolox_args.device = "cpu"
         exp = yolox_utils.get_exp(yolox_args.exp_file, yolox_args.name)
-        return yolox_utils.build_model(exp, yolox_args),yolox_args
+        return yolox_utils.build_model(exp, yolox_args), yolox_args
 
     def build_reid_model(self):
         # get_reid_model
@@ -66,7 +64,8 @@ class Pipeline:
 
         args.num_machines = 1
         args.machine_rank = 0
-        port = 2 ** 15 + 2 ** 14 + hash(os.getuid() if sys.platform != "win32" else 1) % 2 ** 14
+        port = 2 ** 15 + 2 ** 14 + \
+            hash(os.getuid() if sys.platform != "win32" else 1) % 2 ** 14
         args.dist_url = "tcp://127.0.0.1:{}".format(port)
         args.opts = None
 
@@ -79,7 +78,7 @@ class Pipeline:
         Checkpointer(model).load(cfg.MODEL.WEIGHTS)  # load trained model
         model.training = False
         model.eval()
-        
+
         return model, args, cfg
 
     def reid_setup(self, args):
@@ -94,24 +93,26 @@ class Pipeline:
         default_setup(cfg, args)
         return cfg
 
-
     def spot_object_from_image(self, image) -> List[DetectedObject]:
         return yolox_utils.get_objects_from_image(self.yolox_predictor, image)
-        
+
     def spot_object_from_video(self, video):
         obj_groups = []
         for image in video:
             objects = self.spot_object_from_image(image)
             obj_groups.append(objects)
         return obj_groups
-    
+
     def get_embedding(self, objects: List[DetectedObject]):
         for obj in objects:
-            inputs = torch.from_numpy(obj.img).unsqueeze(0).permute(0,3,1,2).float()
-            inputs = torch.concat([inputs,inputs], dim=0) #fix batchsize=1 bug
+            inputs = torch.from_numpy(obj.img).unsqueeze(
+                0).permute(0, 3, 1, 2).float()
+            # fix batchsize=1 bug
+            inputs = torch.concat([inputs, inputs], dim=0)
             if self.reid_cfg.MODEL.DEVICE == "cuda":
                 inputs = inputs.cuda()
             outputs = self.reid_model(inputs)
+            outputs = F.normalize(outputs, p=2, dim=1)
             obj.embedding = outputs[0]
             print(obj.embedding)
         return objects

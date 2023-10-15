@@ -234,7 +234,7 @@ mysql -h localhost -u root -p Bike_Database
 
 - 将`src\models\configs\PersonalConfigTemplate.py`复制为`src\models\configs\PersonalConfig.py`，并根据自己的情况修改其中的配置
 
-- 在`src`目录下运行`python main.py -mode q`即可启动项目
+- 在`src`目录下运行`python main.py -mode q`即可启动项目的查询模块，运行`python main.py -mode s`即可启动项目的监控模块
 
 此后服务器的7860端口（默认端口）就可以获取用户的请求，响应用户的查询
 

@@ -1,4 +1,5 @@
 import torch.nn.functional as F
+import torchvision.transforms as T
 import torch
 from typing import List
 from models import BikePerson
@@ -16,6 +17,9 @@ class Pipeline:
     def __init__(self):
         self.yolox_predictor, self.yolo_args = self.build_yolox_model()
         self.reid_model, self.reid_args, self.reid_cfg = self.build_reid_model()
+        size_train = self.reid_cfg.INPUT.SIZE_TRAIN
+        self.reid_resize = T.Resize(size_train[0] if len(
+            size_train) == 1 else size_train, interpolation=3)
 
     def __call__(self, image, cam_id):  # run the pipeline
         objs = self.spot_object_from_image(image)
@@ -105,8 +109,9 @@ class Pipeline:
 
     def get_embedding(self, objects: List[DetectedObject]):
         for obj in objects:
-            inputs = torch.from_numpy(obj.img).unsqueeze(
-                0).permute(0, 3, 1, 2).float()
+            inputs = torch.from_numpy(obj.img).unsqueeze(0).permute(0, 3, 1, 2).float()  # HWC image to CHW
+            inputs = self.reid_resize(inputs)
+
             # fix batchsize=1 bug
             inputs = torch.concat([inputs, inputs], dim=0)
             if self.reid_cfg.MODEL.DEVICE == "cuda":

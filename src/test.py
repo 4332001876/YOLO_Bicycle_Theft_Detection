@@ -132,7 +132,7 @@ class Tester:
         manager = SurveillanceCameraManager(
             self.server_pipeline, cam_id=0, camera_url=0)
         # manager.run()
-        path_pattern = r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_001*\cam*_bike_00*.jpg"
+        path_pattern = r"D:\Python\Great Project\YOLO_Bicycle_Theft_Detection_Attachment\BikePerson\cam_1_2\Bike\Person_00[012]*\cam*_bike_000[258].jpg"
         manager.read_img(path_pattern)
         print("Number of Entities in MilvusDb:",
               self.server_pipeline.milvus.get_num_entities())
